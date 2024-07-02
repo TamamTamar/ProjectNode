@@ -4,6 +4,7 @@ import { Logger } from "../logs/logger";
 import { productService } from "../services/product-service";
 import { usersService } from "../services/users-service";
 import { products, users } from "./initial-data";
+import Product from "./models/product-model";
 import Card from "./models/product-model";
 
 const initDB = async () => {
@@ -24,8 +25,8 @@ const initDB = async () => {
       }
     }
 
-    const cardsCount = await Card.countDocuments();
-    if (cardsCount >= 3) {
+    const productsCount = await Product.countDocuments();
+    if (productsCount >= 3) {
       Logger.log("3 or more cards already exist. Skipping card initialization.");
       return;
     }

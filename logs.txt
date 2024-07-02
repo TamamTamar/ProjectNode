@@ -2,3 +2,35 @@ hi
 Database Connected
 DB_CONNECTION_STRING is not defined in your .env file
 hi
+hi
+3 or more users already exist. Skipping user initialization.
+3 or more cards already exist. Skipping card initialization.
+Database Connected
+hi
+Database Connected
+hi
+hi
+hi
+hi
+hi
+3 or more users already exist. Skipping user initialization.
+3 or more cards already exist. Skipping card initialization.
+Database Connected
+hi
+hi
+hi
+3 or more users already exist. Skipping user initialization.
+hi
+3 or more users already exist. Skipping user initialization.
+Database initialization failed: cardsCount is not defined
+Database Connected
+hi
+3 or more users already exist. Skipping user initialization.
+Database Connected
+3 or more cards already exist. Skipping card initialization.
+Database Connected
+3 or more users already exist. Skipping user initialization.
+3 or more cards already exist. Skipping card initialization.
+Database Connected
+3 or more users already exist. Skipping user initialization.
+3 or more cards already exist. Skipping card initialization.
