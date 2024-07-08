@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
-import bizProductsError from "../errors/bizProductsError";
+
 import { validateToken } from "./validate-token";
+import bizProductsError from "../errors/BizProductsError";
 
 const _isAdmin: RequestHandler = (req, _, next) => {
   if (req.payload?.isAdmin) {

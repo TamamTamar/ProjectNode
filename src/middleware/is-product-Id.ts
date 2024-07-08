@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 
 import { productService } from "../services/product-service";
-import bizProductsError from "../errors/bizProductsError";
+import bizProductsError from "../errors/BizProductsError";
 
 
 

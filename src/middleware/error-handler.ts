@@ -2,7 +2,7 @@ import { ValidationError } from "joi";
 import { ErrorRequestHandler } from "express";
 
 import { MongoServerError } from "mongodb";
-import bizProductsError from "../errors/bizProductsError";
+import bizProductsError from "../errors/BizProductsError";
 
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   //my error

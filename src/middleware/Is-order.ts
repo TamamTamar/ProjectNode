@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import bizProductsError from "../errors/bizProductsError";
+import bizProductsError from "../errors/BizProductsError";
 import Order from "../db/models/order-model";
 
 const isOrder: RequestHandler = async (req, _, next) => {

@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import bizProductsError from "../errors/bizProductsError";
+import bizProductsError from "../errors/BizProductsError";
 import { validateToken } from "./validate-token";
 
 const _isSelf: RequestHandler = (req, res, next) => {

@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import { validateToken } from "./validate-token";
-import bizProductsError from "../errors/bizProductsError";
+import bizProductsError from "../errors/BizProductsError";
 import { productService } from "../services/product-service";
 
 
