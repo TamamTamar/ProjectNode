@@ -7,7 +7,7 @@ import bizProductsError from "../errors/BizProductsError";
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   //my error
   if (err instanceof bizProductsError) {
-    return res.status(err.status).json(err);
+    return res.status(err.status).json(err.message);
   }
 
   //Invalid Object ID:
