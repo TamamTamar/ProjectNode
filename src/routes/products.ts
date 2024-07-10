@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { isAdmin } from "../middleware/is-admin";
-import { isBusiness } from "../middleware/is-business";
 import isProductId from "../middleware/is-product-Id";
 import { validateProduct } from "../middleware/joi";
 import { validateToken } from "../middleware/validate-token";
@@ -48,7 +47,7 @@ router.put("/:id", ...isAdmin,isProductId, async (req, res, next) => {
   
 
 //create product
-router.post("/", ...isBusiness, validateProduct, async (req, res, next) => {
+router.post("/", validateProduct, async (req, res, next) => {
   try {
     const result = await productService.createProduct(req.body, req.payload._id);
     res.status(201).json(result);

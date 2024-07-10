@@ -18,7 +18,7 @@ const users = [
       houseNumber: 5,
       zip: "8920435",
     },
-    isBusiness: true,
+   // isBusiness: true,
   },
   {
     cart : [],
@@ -38,7 +38,7 @@ const users = [
       houseNumber: 5,
       zip: "8920435",
     },
-    isBusiness: true,
+   // isBusiness: true,
   },
   {
     cart : [],
@@ -58,7 +58,7 @@ const users = [
       houseNumber: 5,
       zip: "8920435",
     },
-    isBusiness: true,
+    //isBusiness: true,
 
   },
 
