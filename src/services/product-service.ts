@@ -4,10 +4,11 @@ import Product from "../db/models/product-model";
 import { Logger } from "../logs/logger";
 import User from "../db/models/user-model";
 import bizProductsError from "../errors/BizProductsError";
+import { promises } from "dns";
 
 
 //generate random barcode
-const generateBarcodeNumber = async () => {
+const generateBarcodeNumber = async (): Promise<number> => {
   //generate random bizNumber:
   while (true) {
     const r = _.random(1_000_000, 9_999_999);
@@ -20,6 +21,9 @@ const generateBarcodeNumber = async () => {
 //create product
 export const productService = {
   createProduct: async (data: IProductInput, userId: string) => {
+    if (!data.size) {
+      data.size = "S";
+    }
     //userId is extracted from the JWT
     const product = new Product(data);
     product.userId = userId;
@@ -60,6 +64,7 @@ export const productService = {
         productId: product._id,
         title: product.title,
         price: product.price,
+        size: product.size
       });
     }
 
@@ -89,7 +94,35 @@ export const productService = {
     } else {
       throw new bizProductsError(400, "User not found");
     }
-  }
+  },
+  //replenish stock
+  bulkReplenishStock: async (updates: { id: string; size: string; quantity: number }[]) => {
+    if (!Array.isArray(updates) || updates.length === 0) {
+      throw new bizProductsError(400, "Updates must be a non-empty array");
+    }
+
+    const results = [];
+
+    for (const update of updates) {
+      if (!update.id || !update.size || !update.quantity) {
+        throw new bizProductsError(400, "Each update must include id, size, and quantity");
+      }
+      if (update.quantity <= 0) {
+        throw new bizProductsError(400, "Quantity must be greater than 0");
+      }
+
+      const product = await Product.findById(update.id);
+      if (!product) throw new bizProductsError(404, `Product not found: ${update.id}`);
+      if (!['S', 'M', 'L'].includes(update.size)) throw new bizProductsError(400, `Invalid size: ${update.size}`);
+
+      product.size[update.size] += update.quantity;
+      product.quantity += update.quantity;
+      await product.save();
+      results.push(product);
+    }
+
+    return results;
+  },
 
 };
 

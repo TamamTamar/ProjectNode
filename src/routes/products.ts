@@ -47,7 +47,7 @@ router.put("/:id", ...isAdmin,isProductId, async (req, res, next) => {
   
 
 //create product
-router.post("/", validateProduct, async (req, res, next) => {
+router.post("/", validateProduct,...isAdmin, async (req, res, next) => {
   try {
     const result = await productService.createProduct(req.body, req.payload._id);
     res.status(201).json(result);
@@ -94,6 +94,15 @@ router.get("/shopping-cart/all", validateToken, async (req, res, next) => {
   try {
     const userId = req.payload._id;
     const products = await productService.getShoppingCart(userId);
+    res.json(products);
+  } catch (e) {
+    next(e);
+  }
+});
+router.patch("/replenish", validateToken, isAdmin, async (req, res, next) => {
+  try {
+    const updates = req.body;
+    const products = await productService.bulkReplenishStock(updates);
     res.json(products);
   } catch (e) {
     next(e);
