@@ -3,11 +3,12 @@ import { isAdmin } from "../middleware/is-admin";
 import { isAdminOrSelf } from "../middleware/is-admin-or-self";
 import { validateLogin, validateUser } from "../middleware/joi";
 import { usersService } from "../services/users-service";
+import { isSelf } from "../middleware/is-self";
 
 const router = Router();
 
 //update user
-router.put("/:id", ...isAdminOrSelf, async (req, res, next) => {
+router.put("/:id", ...isSelf, async (req, res, next) => {
   try {
     const userId = req.params.id;
     const userData = req.body;
