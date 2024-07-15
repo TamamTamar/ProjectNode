@@ -72,15 +72,13 @@ export const productService = {
     return user.cart;
   },
 
-
-
-
-
+//update product
   updateProduct: async (id: string, data: IProductInput) => {
     const product = await Product.findOneAndUpdate({ _id: id }, data, { new: true });
     return product;
   },
 
+  //delete product
   deleteProduct: async (id: string) => {
     const product = await Product.findByIdAndDelete(id);
     return product;

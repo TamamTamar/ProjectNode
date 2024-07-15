@@ -5,6 +5,8 @@ import bizProductsError from "../errors/BizProductsError";
 
 
 export const orderService = {
+
+    //create order
     createOrder: async (userId: string, products: IOrderProduct[]) => {
         try {
             const orderProducts = await Promise.all(products.map(async product => {
@@ -44,7 +46,7 @@ export const orderService = {
         }
     },
 
-
+    //cancel order
     cancelOrder: async (orderId: string) => {
         const order = await Order.findById(orderId);
         /*     if (!order)
@@ -69,12 +71,13 @@ export const orderService = {
     },
 
 
-
+//get order by id
     getOrder: async (orderId: string) => {
         const order = await Order.findById(orderId);
         return order;
     },
 
+    //get orders by user
     getOrdersByUser: async (userId: string) => {
         return Order.find({ userId }).populate("products.productId");
     },

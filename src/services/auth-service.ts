@@ -7,10 +7,12 @@ export const authService = {
     return bcrypt.hash(plainTextPassword, rounds);
   },
 
+//compare passwords
   comparePassword: (plainTextPassword: string, hash: string) => {
     return bcrypt.compare(plainTextPassword, hash);
   },
 
+  //generate JWT
   generateJWT: (payload: IJWTPayload) => {
     const secret = process.env.JWT_SECRET;
     if (!secret) {
@@ -19,6 +21,7 @@ export const authService = {
     return jwt.sign(payload, secret);
   },
 
+  //validate JWT
   validateJWT: (token: string) => {
     const secret = process.env.JWT_SECRET;
     if (!secret) {

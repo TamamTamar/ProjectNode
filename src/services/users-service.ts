@@ -1,4 +1,4 @@
-import { IJWTPayload, ILogin, IUserInput } from "../@types/@types";
+import { IJWTPayload, ILogin, IupdateUserType, IUserInput } from "../@types/@types";
 import User from "../db/models/user-model";
 import BizProductsError from "../errors/BizProductsError";
 
@@ -7,12 +7,10 @@ import { authService } from "./auth-service";
 
 export const usersService = {
   //update user
-  updateUser: async (id: string, data: IUserInput) => {
-    data.password = await authService.hashPassword(data.password);
-    const user = await User.findByIdAndUpdate(id, data, { new: true });
-    return user;
-
-  },
+  updateUser: async (data: IupdateUserType, id: string) => {
+    // data.password = await authService.hashPassword(data.password);
+    return User.findOneAndUpdate({ _id: id }, data, { new: true });
+},
 
   //create user
   createUser: async (data: IUserInput) => {

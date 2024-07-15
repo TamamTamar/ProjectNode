@@ -102,7 +102,7 @@ export const analyticsService = {
         };
     },
 
-
+//get top selling products
     getTopSellingProducts: async () => {
         const products = await Product.find().sort({ sold: -1 }).limit(5);
         return products.map(product => ({
