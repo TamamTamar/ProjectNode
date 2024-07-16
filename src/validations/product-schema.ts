@@ -1,7 +1,6 @@
 import Joi from "joi";
 import { IProductInput } from "../@types/@types";
-import { phoneRegex } from "./patterns";
-import { addressSchema, imageSchema } from "./user-schema";
+import { imageSchema } from "./user-schema";
 
 const productSchema = Joi.object<IProductInput>({
   title: Joi.string().min(2).max(256).required(),

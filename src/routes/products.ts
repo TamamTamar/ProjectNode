@@ -4,6 +4,7 @@ import isProductId from "../middleware/is-product-Id";
 import { validateProduct } from "../middleware/joi";
 import { validateToken } from "../middleware/validate-token";
 import { productService } from "../services/product-service";
+import upload from "../middleware/uploads";
 
 
 
@@ -22,7 +23,7 @@ router.delete("/:id", ...isAdmin, isProductId, async (req, res, next) => {
 });
 
 //update product
-router.put("/:id", ...isAdmin,isProductId, async (req, res, next) => {
+router.put("/:id", ...isAdmin, isProductId, async (req, res, next) => {
   try {
     //const userId = req.payload._id;
     const productId = req.params.id;
@@ -44,12 +45,19 @@ router.put("/:id", ...isAdmin,isProductId, async (req, res, next) => {
     next(e);
   }
 }); */
-  
+
 
 //create product
-router.post("/", validateProduct,...isAdmin, async (req, res, next) => {
+router.post("/", isAdmin, upload.single("image"), async (req, res, next) => {
   try {
-    const result = await productService.createProduct(req.body, req.payload._id);
+    console.log("Payload:", req.payload); // הוספת דיבאג
+    if (!req.payload) {
+      throw new Error("Invalid token");
+    }
+    const imageUrl = `http://localhost:8080/uploads/${req.file.filename}`;
+    res.json({ imageUrl })
+    const productData = { ...req.body, image: { url: imageUrl, alt: req.body.alt } };
+    const result = await productService.createProduct(productData, req.payload._id);
     res.status(201).json(result);
   } catch (e) {
     next(e);
@@ -78,7 +86,7 @@ router.get("/:id", isProductId, async (req, res, next) => {
 
 //toggle shopping cart
 
-router.patch("/:id/shopping-cart", validateToken,isProductId, async (req, res, next) => {
+router.patch("/:id/shopping-cart", validateToken, isProductId, async (req, res, next) => {
   try {
     const userId = req.payload._id;
     const productId = req.params.id;

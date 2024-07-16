@@ -1,10 +1,8 @@
 import _ from "underscore";
 import { IProductInput } from "../@types/@types";
 import Product from "../db/models/product-model";
-import { Logger } from "../logs/logger";
 import User from "../db/models/user-model";
 import bizProductsError from "../errors/BizProductsError";
-import { promises } from "dns";
 
 
 //generate random barcode
@@ -18,12 +16,11 @@ const generateBarcodeNumber = async (): Promise<number> => {
     }
   }
 };
-//create product
+
 export const productService = {
+
+  //create product
   createProduct: async (data: IProductInput, userId: string) => {
-    if (!data.size) {
-      data.size = "S";
-    }
     //userId is extracted from the JWT
     const product = new Product(data);
     product.userId = userId;
@@ -35,9 +32,6 @@ export const productService = {
   //get all products
   getProducts: async () => Product.find(),
 
-  //get product by id
-  /*   getProduct: async (id: string) => Product.findById(id),
-   */
   //get product by user id
   getProductByUserId: async (userId: string) => Product.find({ userId: userId }),
 
