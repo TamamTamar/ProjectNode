@@ -1,11 +1,9 @@
-
-
-export type IName = {
+ export type IName = {
   first: string;
   middle?: string;
   last: string;
 };
-
+ 
 export type IAddress = {
   street: string;
   city: string;
@@ -14,12 +12,11 @@ export type IAddress = {
   country: string;
   houseNumber: number;
 };
-
+ 
 export type IImage = {
-  alt: string;
   url: string;
 };
-
+ 
 export type IUserInput = {
   email: string;
   phone: string;
@@ -27,43 +24,46 @@ export type IUserInput = {
   /* isBusiness: boolean; */
   address: IAddress;
   name: IName;
-  image?: IImage;
+ /*  image?: IImage;
+  alt: string; */
 };
-
+ 
 export type IUser = IUserInput & {
   createdAt: Date;
   isAdmin: boolean;
   cart: ICartProduct[];
 };
-
+ 
 export type ICartProduct = {
   productId: string;
   title: string;
   price: number;
   size: string;
 };
-
+ 
 export type ILogin = {
   email: string;
   password: string;
 };
-
+ 
 export type IJWTPayload = {
   _id: string;
   isAdmin: boolean;
 /*   isBusiness: boolean; */
 };
-
+ 
 export type IProductInput = {
   title: string;
   subtitle: string;
   description: string;
   price: number;
   image: IImage;
+  alt: string;
   size: string;
   quantity: number;
+  barcode: number;
 };
-
+ 
 export type IProduct = IProductInput & {
   _id: string;
   barcode: number;
@@ -73,13 +73,13 @@ export type IProduct = IProductInput & {
   sold: number;
   userId: string;
 };
-
+ 
 export type IOrderProduct = {
   productId: string;
   quantity: number;
   size: string;
 };
-
+ 
 export type IOrder = {
   userId: string;
   products: IOrderProduct[];
@@ -88,22 +88,23 @@ export type IOrder = {
   createdAt: Date;
   orderNumber: string;
 };
-
+ 
 export interface SalesByDateQuery {
   startDate: string;
   endDate: string;
 }
-export type IupdateUserType = {
+ 
+export type IUpdateUserType = {
   name: {
     first: string;
     middle: string;
     last: string;
   };
   phone: string;
-  image: {
-    url: string;
-    alt: string;
+  /* image: {
+    url?: string;
   };
+  alt: string; */
   address: {
     state: string;
     country: string;

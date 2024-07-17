@@ -48,15 +48,21 @@ router.put("/:id", ...isAdmin, isProductId, async (req, res, next) => {
 
 
 //create product
-router.post("/", isAdmin, upload.single("image"), async (req, res, next) => {
+router.post("/", ...isAdmin, upload.single("image"),validateProduct, async (req, res, next) => {
   try {
     console.log("Payload:", req.payload); // הוספת דיבאג
     if (!req.payload) {
       throw new Error("Invalid token");
     }
     const imageUrl = `http://localhost:8080/uploads/${req.file.filename}`;
-    res.json({ imageUrl })
-    const productData = { ...req.body, image: { url: imageUrl, alt: req.body.alt } };
+    //res.json({ imageUrl })
+    const productData = { 
+      ...req.body, 
+      image: { 
+        url: imageUrl, 
+        alt: req.body.alt // מוציא נכון את alt מתוך formData
+      } 
+    };
     const result = await productService.createProduct(productData, req.payload._id);
     res.status(201).json(result);
   } catch (e) {

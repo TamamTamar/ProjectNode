@@ -10,6 +10,7 @@ const productSchema = Joi.object<IProductInput>({
   price: Joi.number().min(1).max(10000).required(),
   quantity: Joi.number().min(1).max(10000).required(),
   image: imageSchema,
+  alt: Joi.string().min(2).max(256).required(),
 });
 
 export default productSchema;
