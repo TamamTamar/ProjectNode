@@ -1,9 +1,9 @@
- export type IName = {
+export type IName = {
   first: string;
   middle?: string;
   last: string;
 };
- 
+
 export type IAddress = {
   street: string;
   city: string;
@@ -12,11 +12,11 @@ export type IAddress = {
   country: string;
   houseNumber: number;
 };
- 
+
 export type IImage = {
   url: string;
 };
- 
+
 export type IUserInput = {
   email: string;
   phone: string;
@@ -27,31 +27,42 @@ export type IUserInput = {
  /*  image?: IImage;
   alt: string; */
 };
- 
+
 export type IUser = IUserInput & {
   createdAt: Date;
   isAdmin: boolean;
   cart: ICartProduct[];
 };
- 
+
 export type ICartProduct = {
   productId: string;
   title: string;
   price: number;
   size: string;
 };
- 
+
+
+export type ICartItem = {
+  productId: string;
+  quantity: number;
+};
+
+export type ICart = {
+  userId: string;
+  items: ICartItem[];
+};
+
 export type ILogin = {
   email: string;
   password: string;
 };
- 
+
 export type IJWTPayload = {
   _id: string;
   isAdmin: boolean;
 /*   isBusiness: boolean; */
 };
- 
+
 export type IProductInput = {
   title: string;
   subtitle: string;
@@ -63,7 +74,7 @@ export type IProductInput = {
   quantity: number;
   barcode: number;
 };
- 
+
 export type IProduct = IProductInput & {
   _id: string;
   barcode: number;
@@ -73,13 +84,13 @@ export type IProduct = IProductInput & {
   sold: number;
   userId: string;
 };
- 
+
 export type IOrderProduct = {
   productId: string;
   quantity: number;
   size: string;
 };
- 
+
 export type IOrder = {
   userId: string;
   products: IOrderProduct[];
@@ -88,12 +99,12 @@ export type IOrder = {
   createdAt: Date;
   orderNumber: string;
 };
- 
+
 export interface SalesByDateQuery {
   startDate: string;
   endDate: string;
 }
- 
+
 export type IUpdateUserType = {
   name: {
     first: string;
@@ -101,10 +112,6 @@ export type IUpdateUserType = {
     last: string;
   };
   phone: string;
-  /* image: {
-    url?: string;
-  };
-  alt: string; */
   address: {
     state: string;
     country: string;

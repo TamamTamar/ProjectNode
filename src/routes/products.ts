@@ -23,19 +23,28 @@ router.delete("/:id", ...isAdmin, isProductId, async (req, res, next) => {
 });
 
 //update product
-router.put("/:id", ...isAdmin, isProductId, async (req, res, next) => {
+router.put("/:id", ...isAdmin, upload.single("image"), async (req, res, next) => {
   try {
-    //const userId = req.payload._id;
-    const productId = req.params.id;
-    const productData = req.body;
-
-    const updatedProduct = await productService.updateProduct(productId, productData);
+    console.log("Payload:", req.payload); // הוספת דיבאג
+    if (!req.payload) {
+      throw new Error("Invalid token");
+    }
+    const imageUrl = req.file ? `http://localhost:8080/uploads/${req.file.filename}` : req.body.imageUrl;
+    const productData =
+    {
+      ...req.body,
+      image:
+      {
+        url: imageUrl,
+        alt: req.body.alt
+      }
+    };
+    const updatedProduct = await productService.updateProduct(req.params.id, productData);
     res.json(updatedProduct);
   } catch (e) {
     next(e);
   }
 });
-
 
 /* router.get("/my-products", validateToken, async (req, res, next) => {
   try {
@@ -48,7 +57,7 @@ router.put("/:id", ...isAdmin, isProductId, async (req, res, next) => {
 
 
 //create product
-router.post("/", ...isAdmin, upload.single("image"),validateProduct, async (req, res, next) => {
+router.post("/", ...isAdmin, upload.single("image"), validateProduct, async (req, res, next) => {
   try {
     console.log("Payload:", req.payload); // הוספת דיבאג
     if (!req.payload) {
@@ -56,12 +65,12 @@ router.post("/", ...isAdmin, upload.single("image"),validateProduct, async (req,
     }
     const imageUrl = `http://localhost:8080/uploads/${req.file.filename}`;
     //res.json({ imageUrl })
-    const productData = { 
-      ...req.body, 
-      image: { 
-        url: imageUrl, 
+    const productData = {
+      ...req.body,
+      image: {
+        url: imageUrl,
         alt: req.body.alt // מוציא נכון את alt מתוך formData
-      } 
+      }
     };
     const result = await productService.createProduct(productData, req.payload._id);
     res.status(201).json(result);
