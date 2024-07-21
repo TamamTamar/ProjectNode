@@ -1,7 +1,7 @@
 import Joi from "joi";
-import { phoneRegex } from "../../validations/patterns";
-import { addressSchema, imageSchema } from "../../validations/user-schema";
 import { IName, IUpdateUserType } from "../../@types/@types";
+import { phoneRegex } from "../../validations/patterns";
+import { addressSchema } from "../../validations/user-schema";
 
 const updateUserSchema = Joi.object<IUpdateUserType>({
     name: Joi.object<IName>({

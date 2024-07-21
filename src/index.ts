@@ -13,6 +13,9 @@ import cors from 'cors';
 import { analyticsRouter } from "./routes/analytics-router";
 import { orderRouter } from "./routes/order-router";
 import upload from "./middleware/uploads";
+import { cartRouter } from "./routes/cart-router";
+
+
 
 const app = express();
 
@@ -25,6 +28,7 @@ app.use(cors({ origin: ["http://localhost:5173", "http://localhost:5174"] }));
   res.send('File uploaded successfully');
 }); */
 
+app.use("/api/v1/cart", cartRouter)
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/analytics", analyticsRouter);

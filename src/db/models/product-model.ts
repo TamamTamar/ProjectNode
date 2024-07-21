@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
-import productSchema from "../schemas/product-schema";
+import { model } from "mongoose";
 import { IProduct } from "../../@types/@types";
+import productSchema from "../schemas/product-schema";
 
-const Product = mongoose.model<IProduct>("Product", productSchema);
+const Product = model<IProduct>("Product", productSchema);
 
 export default Product;
