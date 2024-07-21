@@ -13,6 +13,9 @@ router.get('/', validateToken, async (req, res, next) => {
             return res.status(401).json({ message: "User not authenticated" });
         }
         const cart = await cartService.getCartById(userId);
+        if (!cart) {
+            return res.status(404).json({ message: "Cart not found" });
+        }
         res.json(cart);
     } catch (e) {
         next(e);
@@ -36,7 +39,7 @@ router.post('/remove', validateToken, async (req, res, next) => {
     try {
         const userId = req.payload._id;
         const { productId, quantity } = req.body;
-        const cart = await cartService.removeProductFromCart(userId, productId, quantity);
+        const cart = await cartService.removeProductFromCart(userId, productId);
         res.json(cart);
     } catch (e) {
         next(e);

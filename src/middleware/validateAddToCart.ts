@@ -15,7 +15,7 @@ const _validateAddToCart = async (req: Request, res: Response, next: NextFunctio
         if (!userId) {
             return next(new BizProductsError(401, "User not authenticated"));
         }
-        
+
         if (!product) {
             return next(new BizProductsError(404, "Product not found"));
         }
@@ -34,7 +34,7 @@ const _validateAddToCart = async (req: Request, res: Response, next: NextFunctio
             await cart.save();
         }
 
-       req.product = product; // Add product info to the request for further use
+        req.product = product; // Add product info to the request for further use
         next();
     } catch (error) {
         next(error);
