@@ -1,5 +1,5 @@
 import Product from '../db/models/product-model';
-import { ICart } from '../@types/@types';
+import { ICart, ICartWithTotals } from '../@types/@types';
 import CartModel from '../db/models/cart-model';
 import BizProductsError from '../errors/BizProductsError';
 
@@ -7,14 +7,28 @@ import BizProductsError from '../errors/BizProductsError';
 export const cartService = {
 
 
-    // get cart
-    getCartById: async (userId: string): Promise<ICart | null> => {
+    getCartById: async (userId: string): Promise<ICartWithTotals | null> => { // עדכון הטיפוס המוחזר
         try {
             const cart = await CartModel.findOne({ userId }).populate('items.productId');
-            return cart;
+
+            if (!cart) {
+                return null;
+            }
+
+            // חישוב כמות מוצרים סך הכל והמחיר של כל המוצרים יחד
+            const totalQuantity = cart.items.reduce((total, item) => total + item.quantity, 0);
+            const totalPrice = cart.items.reduce((total, item) => total + (item.quantity * item.price), 0);
+
+            // הוספת חישובים למידע המוחזר
+            return {
+                ...cart.toObject(),
+                totalQuantity,
+                totalPrice
+            } as ICartWithTotals; // שינוי טיפוס המידע המוחזר
+
         } catch (error) {
             console.error("Error fetching cart:", error); // Debugging
-            throw new BizProductsError(404, 'Error fetching cart');
+            throw new BizProductsError(404,'Error fetching cart');
         }
     },
 
@@ -27,7 +41,7 @@ export const cartService = {
         // Check if the product exists in the database
         const product = await Product.findById(productId);
         if (!product) {
-            throw new Error('Product not found');
+            throw new BizProductsError(404,'Product not found');
         }
 
         // If no cart exists, create a new cart
@@ -64,7 +78,7 @@ export const cartService = {
             const cart = await CartModel.findOne({ userId });
     
             if (!cart) {
-                throw new Error('Cart not found');
+                throw new BizProductsError(404,'Cart not found');
             }
     
             // מצא את האינדקס של המוצר בעגלה

@@ -40,6 +40,10 @@ export interface ICart extends Document{
   userId: string; // נשאר כמחרוזת לפי הבקשה שלך
   items: ICartItem[];
 }
+export interface ICartWithTotals extends ICart {
+  totalQuantity: number;
+  totalPrice: number;
+};
 
 
 export type ICartItem = {
