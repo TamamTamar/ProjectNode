@@ -1,3 +1,5 @@
+
+
 export type IName = {
   first: string;
   middle?: string;
@@ -32,26 +34,36 @@ export type IUser = IUserInput & {
   _id?: string;
   createdAt: Date;
   isAdmin: boolean;
-  cart?: [];
+  cart?: [],
+  
 };
 
+/* export type ICartProduct = {
+  productId: string;
+  title: string;
+  price: number;
+  size: string;
+};  */
 
-export interface ICart extends Document{
-  userId: string; // נשאר כמחרוזת לפי הבקשה שלך
+export interface ICartItem {
+  productId: string;
+  quantity: number;
+  title: string;
+  price: number;
+  size: string ;
+  image?: IImage;
+};
+
+export interface ICart extends Document {
+  userId: string;
   items: ICartItem[];
-}
+};
+
 export interface ICartWithTotals extends ICart {
   totalQuantity: number;
   totalPrice: number;
 };
 
-
-export type ICartItem = {
-  productId: string; 
-    quantity: number;
-    title: string;
-    price: number;
-};
 
 export type ILogin = {
   email: string;
@@ -80,6 +92,7 @@ export type IProduct = IProductInput & {
   _id: string;
   barcode: number;
   createdAt: Date;
+  shoppingCart: string[];
   quantity: number;
   sold: number;
   userId: string;
@@ -121,3 +134,4 @@ export type IUpdateUserType = {
     zip: number;
   };
 };
+

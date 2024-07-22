@@ -38,34 +38,6 @@ export const productService = {
   //get product by id
   getProductById: async (id: string) => Product.findById(id),
 
-  //toggle shopping cart
-  toggleShoppingCart: async (userId: string, productId: string) => {
-    const user = await User.findById(userId);
-    const product = await Product.findById(productId);
-
-    // Ensure that productId is a string before comparison
-    const productIdStr = productId.toString();
-
-    // Find the product in the cart, checking if productId exists and is a string
-    const productInCart = user.cart.find(item => item.productId?.toString() === productIdStr);
-
-    if (productInCart) {
-      // Remove the product from the cart
-      user.cart = user.cart.filter(item => item.productId?.toString() !== productIdStr);
-    } else {
-      // Add the product to the cart, ensuring all necessary properties are included
-      user.cart.push({
-        productId: product._id,
-        title: product.title,
-        price: product.price,
-        size: product.size
-      });
-    }
-
-    await user.save();
-    return user.cart;
-  },
-
 //update product
   updateProduct: async (id: string, data: IProductInput) => {
     const product = await Product.findOneAndUpdate({ _id: id }, data, { new: true });

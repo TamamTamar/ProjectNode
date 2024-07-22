@@ -27,7 +27,7 @@ router.post('/add', ...validateAddToCart, async (req, res, next) => {
     try {
         const { productId, quantity, size } = req.body;
         const userId = req.payload._id;
-        const cart = await cartService.addProductToCart(userId, productId, quantity);
+        const cart = await cartService.addProductToCart(userId, productId, quantity , size,);
         res.json(cart);
     } catch (e) {
         next(e);
