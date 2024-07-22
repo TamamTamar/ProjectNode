@@ -88,5 +88,19 @@ export const cartService = {
         await cart.save();
 
         return cart;
+    },
+    //update quantity in cart
+    updateQuantityInCart: async (userId: string, productId: string, quantity: number): Promise<ICart | null> => {
+        const cart = await CartModel.findOne({ userId });
+        if (!cart) {
+            throw new Error('Cart not found');
+        }
+        const itemIndex = cart.items.findIndex((item) => item.productId === productId);
+        if (itemIndex === -1) {
+            throw new Error('Product not found in cart');
+        }
+        cart.items[itemIndex].quantity = quantity;
+        await cart.save();
+        return cart;
     }
 };

@@ -56,5 +56,16 @@ router.delete('/clear', validateToken, async (req, res, next) => {
         next(e);
     }
 });
+//update quantity in cart
+router.patch('/update', validateToken, async (req, res, next) => {
+    try {
+        const userId = req.payload._id;
+        const { productId, quantity } = req.body;
+        const cart = await cartService.updateQuantityInCart(userId, productId, quantity);
+        res.json(cart);
+    } catch (e) {
+        next(e);
+    }
+});
 
 export { router as cartRouter };
