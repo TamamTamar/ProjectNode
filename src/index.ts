@@ -1,11 +1,11 @@
 import express, { json } from "express";
-import usersRouter from "./routes/users";
+import usersRouter from "./routes/users-router";
 import notFound from "./middleware/not-found";
 import connect from "./db/connection";
 import configDevEnv from "../config";
 import errorHandler from "./middleware/error-handler";
 import morgan from "morgan";
-import { productRouter } from "./routes/products";
+import { productRouter } from "./routes/products-router";
 import { Logger } from "./logs/logger";
 configDevEnv();
 connect();
