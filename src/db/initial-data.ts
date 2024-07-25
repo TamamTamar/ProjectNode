@@ -1,7 +1,8 @@
+import { IProduct, IProductInput } from "../@types/@types";
+
 const users = [
   {
     isAdmin: true,
-    cart : [],
     name: {
       first: "Tamar",
       middle: "",
@@ -21,7 +22,6 @@ const users = [
    // isBusiness: true,
   },
   {
-    cart : [],
     name: {
       first: "Moshe",
       middle: "",
@@ -41,7 +41,6 @@ const users = [
    // isBusiness: true,
   },
   {
-    cart : [],
     name: {
       first: "Yossi",
       middle: "",
@@ -63,46 +62,44 @@ const users = [
   },
 
 ];
-const products = [
+const products: IProductInput[] = [
   {
     title: "product 1",
     subtitle: "a test value for this card",
     description: "a test value for new card\na test value for new card\n",
     price: 111,
     quantity: 3,
-    sold: 0,
     image: {
-      url: "https://img.izismile.com/img/img13/20201030/640/you_have_never_seen_something_like_this_640_36.jpg",
-      alt: "image of something",
+      url: "http://localhost:8080/uploads/1721164164801-1721142311247-360.png",
     },
+    alt: "image of something",
+    sizes: ["S", "M", "L"],
   },
-
   {
     title: "product 2",
     subtitle: "a test value for this card",
     description: "a test value for new card\na test value for new card\n",
     price: 222,
     quantity: 4,
-    sold: 0,
     image: {
-      url: "https://img.izismile.com/img/img13/20201030/640/you_have_never_seen_something_like_this_640_36.jpg",
-      alt: "image of something",
+      url: "http://localhost:8080/uploads/1721164164801-1721142311247-360.png",
     },
+    alt: "image of something",
+    sizes: ["S", "M", "L"],
   },
-
   {
     title: "product 3",
     subtitle: "a test value for this card",
     description: "a test value for new card\na test value for new card\n",
     price: 333,
     quantity: 5,
-    sold: 2,
     image: {
-      url: "https://img.izismile.com/img/img13/20201030/640/you_have_never_seen_something_like_this_640_36.jpg",
-      alt: "image of something",
+      url: "http://localhost:8080/uploads/1721164164801-1721142311247-360.png",
     },
+    alt: "image of something",
+    sizes: ["S", "M", "L"],
   },
-
-
 ];
+
+
 export { products, users };

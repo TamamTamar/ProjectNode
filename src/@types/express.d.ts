@@ -4,9 +4,8 @@ declare global{
     namespace Express{
         interface Request {
             payload?: IJWTPayload
-            user?: IUser
-            product?: IProduct
-
+            user?: IUser; 
+            product: IProduct;
         }
     }
 }

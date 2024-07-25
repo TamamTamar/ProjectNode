@@ -23,7 +23,7 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
 
   if (err instanceof MongoServerError && err.code === 11000) {
     return res.status(400).json({
-      message: "duplicate key - must be unique",
+      message: "duplicatre key - must be unique",
       value: err.keyValue,
     });
   }

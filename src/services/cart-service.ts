@@ -1,10 +1,13 @@
 import Product from '../db/models/product-model';
-import { ICart, ICartWithTotals, IImage } from '../@types/@types';
+import { ICart, ICartWithTotals } from '../@types/@types';
 import CartModel from '../db/models/cart-model';
 import BizProductsError from '../errors/BizProductsError';
 
+
 export const cartService = {
-    getCartById: async (userId: string): Promise<ICartWithTotals | null> => {
+
+
+    getCartById: async (userId: string): Promise<ICartWithTotals | null> => { // עדכון הטיפוס המוחזר
         try {
             const cart = await CartModel.findOne({ userId }).populate('items.productId');
 
@@ -21,7 +24,8 @@ export const cartService = {
                 ...cart.toObject(),
                 totalQuantity,
                 totalPrice
-            } as ICartWithTotals;
+            } as ICartWithTotals; // שינוי טיפוס המידע המוחזר
+
         } catch (error) {
             console.error("Error fetching cart:", error); // Debugging
             throw new Error('Error fetching cart');
@@ -35,25 +39,28 @@ export const cartService = {
         // Check if the product exists in the database
         const product = await Product.findById(productId);
         if (!product) {
-            throw new BizProductsError(404, 'Product not found');
+            throw new Error('Product not found');
         }
 
         // If no cart exists, create a new cart
         if (!cart) {
             cart = new CartModel({
                 userId,
-                items: [{ productId, quantity, size, title: product.title, price: product.price, image: product.image }]
+                items: [{ productId, quantity, size: size, title: product.title, price: product.price, image: product.image }]
             });
-        } else {
-            // If the cart exists, check if the product already exists in the cart
+        }
+        // If the cart exists, check if the product already exists in the cart
+        else {
             const itemIndex = cart.items.findIndex((item) => item.productId === productId && item.size === size);
 
             // If the product exists, update the quantity
             if (itemIndex > -1) {
                 cart.items[itemIndex].quantity += quantity;
-            } else {
-                // If the product does not exist, add it to the cart
-                cart.items.push({ productId, quantity, size, title: product.title, price: product.price, image: product.image });
+            }
+
+            // If the product does not exist, add it to the cart
+            else {
+                cart.items.push({ productId, quantity, size: size, title: product.title, price: product.price, image: product.image });
             }
         }
 
@@ -67,7 +74,7 @@ export const cartService = {
         const cart = await CartModel.findOne({ userId });
 
         if (!cart) {
-            throw new Error('Cart not found');
+            throw new BizProductsError(404, 'Cart not found');
         }
 
         // סנן את המוצרים כדי להסיר את כל המוצרים עם אותו productId
@@ -77,18 +84,6 @@ export const cartService = {
         return cart;
     },
 
-    clearCart: async (userId: string): Promise<ICart | null> => {
-        const cart = await CartModel.findOne({ userId });
-
-        if (!cart) {
-            throw new Error('Cart not found');
-        }
-
-        cart.items = [];
-        await cart.save();
-
-        return cart;
-    },
     //update quantity in cart
     updateQuantityInCart: async (userId: string, productId: string, quantity: number): Promise<ICart | null> => {
         const cart = await CartModel.findOne({ userId });
@@ -102,5 +97,42 @@ export const cartService = {
         cart.items[itemIndex].quantity = quantity;
         await cart.save();
         return cart;
+    },
+
+   /*  removeProductFromCart: async (userId: string, productId: string, quantity: number): Promise<ICart | null> => {
+        const cart = await CartModel.findOne({ userId });
+
+        if (!cart) {
+            throw new Error('Cart not found');
+        }
+
+        const itemIndex = cart.items.findIndex((item) => item.productId === productId);
+
+        if (itemIndex > -1) {
+            if (cart.items[itemIndex].quantity > quantity) {
+                cart.items[itemIndex].quantity -= quantity;
+            } else {
+                cart.items.splice(itemIndex, 1);
+            }
+            await cart.save();
+            return cart;
+        }
+
+        throw new Error('Product not found in cart');
+    },
+ */
+
+    clearCart: async (userId: string): Promise<ICart | null> => {
+        const cart = await CartModel.findOne({ userId });
+
+        if (!cart) {
+            throw new Error('Cart not found');
+        }
+
+        cart.items = [];
+        await cart.save();
+
+        return cart;
     }
+
 };

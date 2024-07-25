@@ -1,14 +1,47 @@
 import { Router } from "express";
+import { validateProduct } from "../middleware/joi";
+import { productService } from "../services/product-service";
 import { isAdmin } from "../middleware/is-admin";
 import isProductId from "../middleware/is-product-Id";
-import { validateProduct } from "../middleware/joi";
 import { validateToken } from "../middleware/validate-token";
-import { productService } from "../services/product-service";
 import upload from "../middleware/uploads";
 
 
-
 const router = Router();
+
+
+// Add product
+router.post("/", ...isAdmin, upload.single("image"), validateProduct, async (req, res, next) => {
+  try {
+    console.log("Payload:", req.payload); // הוספת דיבאג
+    if (!req.payload) {
+      throw new Error("Invalid token");
+    }
+    const imageUrl = `http://localhost:8080/uploads/${req.file.filename}`;
+    res.json({ imageUrl })
+    const productData = { ...req.body, image: { url: imageUrl, alt: req.body.alt } };
+    const result = await productService.createProduct(productData, req.payload._id);
+    res.status(201).json(result);
+  } catch (e) {
+    next(e);
+  }
+});
+
+//update product
+router.put("/:id", ...isAdmin, upload.single("image"), async (req, res, next) => {
+  try {
+    console.log("Payload:", req.payload); // הוספת דיבאג
+    if (!req.payload) {
+      throw new Error("Invalid token");
+    }
+    const imageUrl = req.file ? `http://localhost:8080/uploads/${req.file.filename}` : req.body.imageUrl;
+    const productData = { ...req.body, image: { url: imageUrl, alt: req.body.alt } };
+    const updatedProduct = await productService.updateProduct(req.params.id, productData);
+    res.json(updatedProduct);
+  } catch (e) {
+    next(e);
+  }
+});
 
 
 //delete product
@@ -23,63 +56,32 @@ router.delete("/:id", ...isAdmin, isProductId, async (req, res, next) => {
 });
 
 //update product
-router.put("/:id", ...isAdmin, upload.single("image"), async (req, res, next) => {
+/* router.put("/:id", ...isAdmin, isProductId, async (req, res, next) => {
   try {
-    console.log("Payload:", req.payload); // הוספת דיבאג
-    if (!req.payload) {
-      throw new Error("Invalid token");
-    }
-    const imageUrl = req.file ? `http://localhost:8080/uploads/${req.file.filename}` : req.body.imageUrl;
-    const productData =
-    {
-      ...req.body,
-      image:
-      {
-        url: imageUrl,
-        alt: req.body.alt
-      }
-    };
-    const updatedProduct = await productService.updateProduct(req.params.id, productData);
+    const userId = req.payload._id;
+    const productId = req.params.id;
+    const productData = req.body;
+    const updatedProduct = await productService.updateProduct(productId, productData, userId);
     res.json(updatedProduct);
-  } catch (e) {
-    next(e);
-  }
-});
-
-/* router.get("/my-products", validateToken, async (req, res, next) => {
-  try {
-    const products = await productService.getProductByUserId(req.payload._id);
-    res.json(products);
   } catch (e) {
     next(e);
   }
 }); */
 
 
-//create product
-router.post("/", ...isAdmin, upload.single("image"), validateProduct, async (req, res, next) => {
-  try {
-    console.log("Payload:", req.payload); // הוספת דיבאג
-    if (!req.payload) {
-      throw new Error("Invalid token");
-    }
-    const imageUrl = `http://localhost:8080/uploads/${req.file.filename}`;
-    //res.json({ imageUrl })
-    const productData = {
-      ...req.body,
-      image: {
-        url: imageUrl,
-        alt: req.body.alt // מוציא נכון את alt מתוך formData
-      }
-    };
-    const result = await productService.createProduct(productData, req.payload._id);
-    res.status(201).json(result);
-  } catch (e) {
-    next(e);
+/* router.post("/", upload.single('image'), validateProduct, isAdmin, async (req, res, next) => { 
+  try { 
+    const imageUrl = req.file ? `/uploads/${req.file.filename}` : null; 
+    const productData = { ...req.body, imageUrl }; 
+    const result = await productService.createProduct(productData, req.payload._id); 
+    res.status(201).json(result); 
+  } catch (e) { 
+    next(e); 
   }
-});
+ }); */
 
-//get all products
+
+ //get allproducts
 router.get("/", async (req, res, next) => {
   try {
     const products = await productService.getProducts();
@@ -92,23 +94,26 @@ router.get("/", async (req, res, next) => {
 //get product by id
 router.get("/:id", isProductId, async (req, res, next) => {
   try {
-    const product = await productService.getProductById(req.params.id);
+    const product = await productService.getProduct(req.params.id);
     res.json(product);
   } catch (e) {
     next(e);
   }
 });
 
-//get shopping cart
-router.get("/shopping-cart/all", validateToken, async (req, res, next) => {
+/* router.patch("/:id/shopping-cart", validateToken, async (req, res, next) => {
   try {
     const userId = req.payload._id;
-    const products = await productService.getShoppingCart(userId);
-    res.json(products);
+    const productId = req.params.id;
+    const cart = await productService.toggleShoppingCart(userId, productId);
+    res.json(cart);
   } catch (e) {
     next(e);
   }
-});
+}); */
+
+
+//replenish
 router.patch("/replenish", validateToken, isAdmin, async (req, res, next) => {
   try {
     const updates = req.body;
@@ -118,7 +123,5 @@ router.patch("/replenish", validateToken, isAdmin, async (req, res, next) => {
     next(e);
   }
 });
-
-
 
 export { router as productRouter };

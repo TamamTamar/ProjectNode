@@ -51,7 +51,7 @@ export interface ICartItem {
   title: string;
   price: number;
   size: string ;
-  image?: IImage;
+  image: IImage;
 };
 
 export interface ICart extends Document {
@@ -83,9 +83,8 @@ export type IProductInput = {
   price: number;
   image: IImage;
   alt: string;
-  size: string;
+  sizes: string [];
   quantity: number;
-  barcode: number;
 };
 
 export type IProduct = IProductInput & {

@@ -2,7 +2,6 @@ import { Schema } from "mongoose";
 import { IUser } from "../../@types/@types";
 import addressSchema from "./address-schema";
 import nameSchema from "./name-schema";
-import cartSchema from "./cart-schema";
 
 const userSchema = new Schema<IUser>({
   name: nameSchema,
