@@ -28,7 +28,7 @@ export const cartService = {
 
         } catch (error) {
             console.error("Error fetching cart:", error); // Debugging
-            throw new Error('Error fetching cart');
+            throw new BizProductsError(400, 'Error fetching cart');
         }
     },
 
@@ -39,7 +39,7 @@ export const cartService = {
         // Check if the product exists in the database
         const product = await Product.findById(productId);
         if (!product) {
-            throw new Error('Product not found');
+            throw new BizProductsError(404, 'Product not found');
         }
 
         // If no cart exists, create a new cart
@@ -88,11 +88,11 @@ export const cartService = {
     updateQuantityInCart: async (userId: string, productId: string, quantity: number): Promise<ICart | null> => {
         const cart = await CartModel.findOne({ userId });
         if (!cart) {
-            throw new Error('Cart not found');
+            throw new BizProductsError(404,'Cart not found');
         }
         const itemIndex = cart.items.findIndex((item) => item.productId === productId);
         if (itemIndex === -1) {
-            throw new Error('Product not found in cart');
+            throw new BizProductsError(404,'Product not found in cart');
         }
         cart.items[itemIndex].quantity = quantity;
         await cart.save();
@@ -118,7 +118,7 @@ export const cartService = {
             return cart;
         }
 
-        throw new Error('Product not found in cart');
+        throw new BizProductsError(404,'Product not found in cart');
     },
  */
 
@@ -126,7 +126,7 @@ export const cartService = {
         const cart = await CartModel.findOne({ userId });
 
         if (!cart) {
-            throw new Error('Cart not found');
+            throw new BizProductsError(404,'Cart not found');
         }
 
         cart.items = [];

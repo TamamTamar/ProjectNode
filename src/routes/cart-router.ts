@@ -5,7 +5,7 @@ import { validateAddToCart } from '../middleware/validateAddToCart';
 
 const router = Router();
 
-
+//get cart
 router.get('/', validateToken, async (req, res, next) => {
     try {
         const userId = req.payload._id; // Ensure user ID is fetched correctly
@@ -19,7 +19,7 @@ router.get('/', validateToken, async (req, res, next) => {
     }
 });
 
-
+//add to cart
 router.post('/add', ...validateAddToCart, async (req, res, next) => {
     try {
         const { productId, quantity, size } = req.body;
@@ -31,6 +31,7 @@ router.post('/add', ...validateAddToCart, async (req, res, next) => {
     }
 });
 
+//remove from cart
 router.post('/remove', validateToken, async (req, res, next) => {
     try {
         const userId = req.payload._id;
@@ -43,7 +44,7 @@ router.post('/remove', validateToken, async (req, res, next) => {
 });
 
 
-
+//update quantity
 router.patch('/update', validateToken, async (req, res, next) => {
     try {
         const userId = req.payload._id;
@@ -55,6 +56,7 @@ router.patch('/update', validateToken, async (req, res, next) => {
     }
 });
 
+//clear cart
 router.delete('/clear', validateToken, async (req, res, next) => {
     const userId = req.payload._id;
     try {
