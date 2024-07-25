@@ -11,8 +11,6 @@ export const cartSchema = new Schema<ICart>({
         title: { type: String, required: true },
         price: { type: Number, required: true },
         size: { type: String, required: true },
-        image: imageSchema
-    
-       
-    }]
+        image: { type: imageSchema, required: true },
+    }],
 });

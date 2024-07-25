@@ -1,4 +1,4 @@
-import { IProduct, IProductInput } from "../@types/@types";
+import {IProductInput } from "../@types/@types";
 
 const users = [
   {

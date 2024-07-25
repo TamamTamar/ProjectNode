@@ -1,6 +1,6 @@
-import Joi from "joi";
+import Joi, { alt } from "joi";
 import { passwordRegex, phoneRegex } from "./patterns";
-import { IAddress, IImage, IName, IUser } from "../@types/@types";
+import { IAddress, IImage, IName, IUpdateUserType, IUser } from "../@types/@types";
 
 const addressSchema = Joi.object<IAddress>({
   city: Joi.string().min(2).max(50).required(),
@@ -12,12 +12,11 @@ const addressSchema = Joi.object<IAddress>({
 });
 
 const imageSchema = Joi.object<IImage>({
-  url: Joi.string().required().min(14).max(256),
- // alt: Joi.string().min(2).max(50).allow(''),
+  url: Joi.string().uri(),
 });
 
 const userSchema = Joi.object<IUser>({
- // isBusiness: Joi.boolean().required(),
+ /*  isBusiness: Joi.boolean().required(), */
   email: Joi.string().email().required(),
   phone: Joi.string().pattern(phoneRegex).required(),
   password: Joi.string().pattern(passwordRegex).required(),
@@ -28,9 +27,22 @@ const userSchema = Joi.object<IUser>({
     middle: Joi.string().min(0),
     last: Joi.string().min(2).max(50).required(),
   }).required(),
-/*   image: imageSchema, */
+ /*  image: imageSchema,
+  alt: Joi.string().min(2).max(50), */
+});
+
+const updateUserSchema = Joi.object<IUpdateUserType>({
+  name: Joi.object<IName>({
+    first: Joi.string().min(2).max(50),
+    middle: Joi.string().min(0),
+    last: Joi.string().min(2).max(50),
+  }),
+  phone: Joi.string().pattern(phoneRegex),
+/*   image: imageSchema,
+alt: Joi.string().min(2).max(50), */
+  address: addressSchema,
 });
 
 export default userSchema;
 
-export { addressSchema, imageSchema, userSchema };
+export { addressSchema, imageSchema, userSchema, updateUserSchema };

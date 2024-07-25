@@ -1,7 +1,6 @@
 import Order from "../db/models/order-model";
 import Product from "../db/models/product-model";
 import { IOrderProduct } from "../@types/@types";
-import BizProductsError from "../errors/BizProductsError";
 
 export const orderService = {
 
@@ -85,10 +84,10 @@ export const orderService = {
 
     cancelOrder: async (orderId: string) => {
         const order = await Order.findById(orderId);
-        if (!order) throw new BizProductsError(404, "Order not found");
+        if (!order) throw new Error("Order not found");
 
         if (order.status === "cancelled") {
-            throw new BizProductsError(400,"Order is already cancelled");
+            throw new Error("Order is already cancelled");
         }
 
         // Return the stock
@@ -116,13 +115,12 @@ export const orderService = {
     getOrdersByUser: async (userId: string) => {
         return Order.find({ userId }).populate("products.productId");
     },
+
     getAllOrders: async () => {
         const orders = await Order.find(({ status: { $ne: "cancelled" } })).populate("products.productId");
         const count = await Order.countDocuments({ status: { $ne: "cancelled" } });
         return { orders: orders.map(order => order.toObject()), count };
-    },
 
-
-
+        },
 
 };
