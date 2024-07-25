@@ -19,20 +19,6 @@ router.get("/all-orders", ...isAdmin, async (req, res, next) => {
     }
 });
 
-/* router.get("/sales-by-date", ...isAdmin, async (req, res, next) => {
-    try {
-        const { startDate, endDate } = req.query;
-
-        // המרת תאריכים למבנה תאריך
-        const start = new Date(startDate as string);
-        const end = new Date(endDate as string);
-
-        const sales = await analyticsService.getSalesByDate(start, end);
-        res.json(sales);
-    } catch (e) {
-        next(e);
-    }
-}); */
 
 //get sales by date
 router.get("/sales-by-date", ...isAdmin, async (req, res, next) => {

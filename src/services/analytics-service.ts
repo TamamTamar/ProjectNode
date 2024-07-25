@@ -113,6 +113,7 @@ export const analyticsService = {
         }));
     },
 
+    //get product sales
     getProductSales: async (productId: string) => {
         const product = await Product.findById(productId);
         return {
@@ -121,7 +122,7 @@ export const analyticsService = {
         };
     },
 
-
+//get order status
     getOrderStatus: async () => {
         const orders = await Order.find({}, { status: 1 }); // נביא רק את השדה status
         console.log("Orders statuses:", orders);

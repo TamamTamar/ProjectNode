@@ -101,17 +101,6 @@ router.get("/:id", isProductId, async (req, res, next) => {
   }
 });
 
-/* router.patch("/:id/shopping-cart", validateToken, async (req, res, next) => {
-  try {
-    const userId = req.payload._id;
-    const productId = req.params.id;
-    const cart = await productService.toggleShoppingCart(userId, productId);
-    res.json(cart);
-  } catch (e) {
-    next(e);
-  }
-}); */
-
 
 //replenish
 router.patch("/replenish", validateToken, isAdmin, async (req, res, next) => {

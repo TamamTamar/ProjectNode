@@ -16,97 +16,45 @@ const generateBizNumber = async () => {
   }
 };
 
-/* const ensureDirectoryExistence = (filePath: string) => {
-  const dirname = path.dirname(filePath);
-  if (fs.existsSync(dirname)) {
-    return true;
-  }
-  ensureDirectoryExistence(dirname);
-  fs.mkdirSync(dirname);
-}; */
-
 export const productService = {
-  /* createProduct: async (data: IProductInput, userId: string) => {
-     if (!data.size) {
-       data.size = 'M';
-     }
-     //userId is extracted from the JWT
-     const product = new Product(data);
-     product.userId = userId;
-     product.barcode = await generateBizNumber();
- 
-     Logger.log(product.barcode);
- 
-     return product.save();
-   }, */
-
-    createProduct: async (data: IProductInput, userId: string) => {
-      
-      const product = new Product(data);
-      product.userId = userId;
-      product.barcode = await generateBizNumber();
-
-      Logger.log(product.barcode);
-
-      return product.save();
-    },
-
-  updateProduct: async (id: string, data: FormData) => {
-      const product = await Product.findByIdAndUpdate(id, data, { new: true });
-      if (!product) throw new Error("Product not found");
-      return product;
-    },
- 
 
 
-  getProducts: async () => Product.find(),
+  //create product
+  createProduct: async (data: IProductInput, userId: string) => {
 
-  getProduct: async (id: string) => Product.findById(id),
+    const product = new Product(data);
+    product.userId = userId;
+    product.barcode = await generateBizNumber();
 
-  getProductByUserId: async (userId: string) => Product.find({ userId: userId }),
+    Logger.log(product.barcode);
 
-
-/* 
-  toggleShoppingCart: async (userId: string, productId: string) => {
-    const user = await User.findById(userId);
-    if (!user) throw new BizCardsError(404, "User not found");
-
-    const product = await Product.findById(productId);
-    if (!product) throw new BizCardsError(404, "Product not found");
-
-    const productInCart = user.cart.find(item => item.productId.toString() === productId);
-    if (productInCart) {
-      user.cart = user.cart.filter(item => item.productId.toString() !== productId);
-    } else {
-      user.cart.push({
-        productId: product._id,
-        title: product.title,
-        price: product.price,
-        size: product.size
-      });
-    }
-
-    await user.save();
-    return user.cart;
+    return product.save();
   },
 
-  getShoppingCart: async (userId: string) => {
-    const user = await User.findById(userId).populate('cart.productId');
-    if (!user) throw new BizCardsError(404, "User not found");
-    return user.cart;
-  }, */
-
- /*  updateProduct: async (id: string, data: IProductInput, userId: string) => {
-    const product = await Product.findOneAndUpdate({ _id: id, userId: userId }, data, { new: true });
-    if (!product) throw new Error("Product not found or user unauthorized to update this product");
+  //update product
+  updateProduct: async (id: string, data: FormData) => {
+    const product = await Product.findByIdAndUpdate(id, data, { new: true });
+    if (!product) throw new Error("Product not found");
     return product;
-  }, */
+  },
 
+
+  //get products
+  getProducts: async () => Product.find(),
+
+  //get product by id
+  getProduct: async (id: string) => Product.findById(id),
+
+  //get product by user id
+  getProductByUserId: async (userId: string) => Product.find({ userId: userId }),
+
+  //delete product
   deleteProduct: async (id: string) => {
     const product = await Product.findByIdAndDelete(id);
     return product;
   },
 
+  //bulk replenish stock
   bulkReplenishStock: async (updates: { id: string; size: string; quantity: number }[]) => {
     if (!Array.isArray(updates) || updates.length === 0) {
       throw new BizProductsError(400, "Updates must be a non-empty array");
