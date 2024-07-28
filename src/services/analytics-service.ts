@@ -1,36 +1,42 @@
-import Order from "../db/models/order-model";
+/* import Order from "../db/models/order-model";
 import Product from "../db/models/product-model";
 import User from "../db/models/user-model";
 import bizProductsError from "../errors/BizProductsError";
 
 export const analyticsService = {
 
-    //get inventory
+    // get inventory
     getInventory: async () => {
         const products = await Product.find();
         return products.map(product => ({
             title: product.title,
-            quantity: product.quantity,
-            sold: product.sold,
+            variants: product.variants.map(variant => ({
+                size: variant.size,
+                quantity: variant.quantity,
+                price: variant.price,
+                totalRevenue: variant.price * variant.quantity,
+            })),
         }));
     },
-    //get all orders
+
+    // get all orders
     getAllOrders: async () => {
         const orders = await Order.find().populate({
             path: 'userId',
             select: 'name', // אכלוס השדה name מתוך userId
-
-        }).populate('products.productId');
-
-        console.log(orders); // Add this line to log the orders data
+        }).populate({
+            path: 'products.productId',
+            select: 'title barcode',
+        });
 
         return orders.map(order => ({
             orderId: order._id,
             userId: order.userId._id,
+            userName: order.userId.name,
             products: order.products.map(product => ({
                 productId: product.productId._id,
-                title: product.title,
-                barcode: product.barcode,
+                title: product.productId.title,
+                barcode: product.productId.barcode,
                 quantity: product.quantity,
                 price: product.price,
             })),
@@ -40,9 +46,8 @@ export const analyticsService = {
         }));
     },
 
-    //get sales by date
+    // get sales by date
     getSalesByDate: async (startDate: Date, endDate: Date) => {
-
         if (!startDate || !endDate) {
             throw new bizProductsError(400, "Start date and end date are required");
         }
@@ -51,7 +56,6 @@ export const analyticsService = {
             throw new bizProductsError(400, "End date cannot be earlier than start date");
         }
 
-        //
         const adjustedEndDate = new Date(endDate);
         adjustedEndDate.setDate(adjustedEndDate.getDate() + 1);
 
@@ -59,21 +63,21 @@ export const analyticsService = {
             {
                 $match: {
                     createdAt: {
-                        $gte: new Date(startDate), // תאריך התחלה
-                        $lte: adjustedEndDate,   // תאריך סיום כולל את כל היום הנוכחי
+                        $gte: new Date(startDate),
+                        $lte: adjustedEndDate,
                     },
-                    status: { $ne: "cancelled" } // לא כולל הזמנות מבוטלות
+                    status: { $ne: "cancelled" },
                 },
             },
             {
                 $group: {
-                    _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }, // קיבוץ לפי יום
-                    totalAmount: { $sum: "$totalAmount" }, // סכום כל הכסף שנכנס
-                    totalSales: { $sum: 1 }, // סך כל המכירות
+                    _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+                    totalAmount: { $sum: "$totalAmount" },
+                    totalSales: { $sum: 1 },
                 },
             },
             {
-                $sort: { _id: 1 }, // מיון לפי תאריך עולה
+                $sort: { _id: 1 },
             },
         ]);
 
@@ -81,17 +85,17 @@ export const analyticsService = {
             {
                 $match: {
                     createdAt: {
-                        $gte: new Date(startDate), // תאריך התחלה
-                        $lte: adjustedEndDate,   // תאריך סיום כולל את כל היום הנוכחי
+                        $gte: new Date(startDate),
+                        $lte: adjustedEndDate,
                     },
-                    status: { $ne: "cancelled" } // לא כולל הזמנות מבוטלות
+                    status: { $ne: "cancelled" },
                 },
             },
             {
                 $group: {
-                    _id: null, // קיבוץ כל המסמכים יחד
-                    totalAmount: { $sum: "$totalAmount" }, // סכום כל הכסף שנכנס
-                    totalSales: { $sum: 1 }, // סך כל המכירות
+                    _id: null,
+                    totalAmount: { $sum: "$totalAmount" },
+                    totalSales: { $sum: 1 },
                 },
             },
         ]);
@@ -102,29 +106,35 @@ export const analyticsService = {
         };
     },
 
-//get top selling products
+    // get top selling products
     getTopSellingProducts: async () => {
-        const products = await Product.find().sort({ sold: -1 }).limit(5);
+        const products = await Product.find().sort({ 'variants.sold': -1 }).limit(5);
         return products.map(product => ({
             title: product.title,
-            sold: product.sold,
-            price: product.price,
-            totalRevenue: product.sold * product.price  // חישוב סך ההכנסות
+            variants: product.variants.map(variant => ({
+                size: variant.size,
+                sold: variant.sold,
+                price: variant.price,
+                totalRevenue: variant.sold * variant.price,
+            })),
         }));
     },
 
-    //get product sales
+    // get product sales
     getProductSales: async (productId: string) => {
         const product = await Product.findById(productId);
         return {
             title: product.title,
-            sold: product.sold,
+            variants: product.variants.map(variant => ({
+                size: variant.size,
+                sold: variant.sold,
+            })),
         };
     },
 
-//get order status
+    // get order status
     getOrderStatus: async () => {
-        const orders = await Order.find({}, { status: 1 }); // נביא רק את השדה status
+        const orders = await Order.find({}, { status: 1 });
         console.log("Orders statuses:", orders);
 
         const statuses = await Order.aggregate([
@@ -135,8 +145,8 @@ export const analyticsService = {
         return statuses;
     },
 
+    // update order status
     updateOrderStatus: async (orderId: string, status: string) => {
-
         const order = await Order.findByIdAndUpdate(orderId, { status }, { new: true });
         if (!order) {
             throw new bizProductsError(404, "Order not found");
@@ -144,27 +154,26 @@ export const analyticsService = {
 
         return order;
     },
+
+    // get users with most orders
     getUsersWithMostOrders: async () => {
-        // שלב 1: איסוף ההזמנות לפי יוזר
         const orders = await Order.aggregate([
             {
                 $group: {
                     _id: "$userId",
                     orders: { $push: "$$ROOT" },
                     totalOrders: { $sum: 1 },
-                    totalAmount: { $sum: "$totalAmount" }
-                }
+                    totalAmount: { $sum: "$totalAmount" },
+                },
             },
             {
-                $sort: { totalOrders: -1 } // סידור לפי מספר ההזמנות בסדר יורד
-            }
+                $sort: { totalOrders: -1 },
+            },
         ]);
 
-        // שלב 2: איסוף פרטי היוזרים
         const userIds = orders.map(order => order._id);
         const users = await User.find({ _id: { $in: userIds } });
 
-        // שלב 3: מיפוי התוצאות לפורמט הרצוי
         const result = orders.map(order => {
             const user = users.find(u => u._id.equals(order._id));
             return {
@@ -180,13 +189,13 @@ export const analyticsService = {
                         productName: p.productName,
                         quantity: p.quantity,
                         price: p.price,
-                        age: p.age
                     })),
-                    createdAt: o.createdAt
-                }))
+                    createdAt: o.createdAt,
+                })),
             };
         });
 
         return result;
     },
 };
+ */

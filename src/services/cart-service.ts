@@ -32,7 +32,7 @@ export const cartService = {
         }
     },
 
-    addProductToCart: async (userId: string, productId: string, quantity: number, size: string): Promise<ICart | null> => {
+    addProductToCart: async (userId: string, productId: string, quantity: number, size: string ,price: number): Promise<ICart | null> => {
         // First, find the cart for the user
         let cart = await CartModel.findOne({ userId });
 
@@ -46,7 +46,7 @@ export const cartService = {
         if (!cart) {
             cart = new CartModel({
                 userId,
-                items: [{ productId, quantity, size: size, title: product.title, price: product.price, image: product.image }]
+                items: [{ productId, quantity, size: size, title: product.title, price: price, image: product.image }]
             });
         }
         // If the cart exists, check if the product already exists in the cart
@@ -60,7 +60,7 @@ export const cartService = {
 
             // If the product does not exist, add it to the cart
             else {
-                cart.items.push({ productId, quantity, size: size, title: product.title, price: product.price, image: product.image });
+                cart.items.push({ productId, quantity, size: size, title: product.title, price: price, image: product.image });
             }
         }
 

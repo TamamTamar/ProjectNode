@@ -1,56 +1,20 @@
-import Order from "../db/models/order-model";
 import Product from "../db/models/product-model";
+import Order from "../db/models/order-model";
 import { IOrderProduct } from "../@types/@types";
+import BizProductsError from "../errors/BizProductsError";
 
 export const orderService = {
 
-   /*  createOrder: async (userId: string, products: IOrderProduct[]) => {
-        try {
-            const orderProducts = await Promise.all(products.map(async product => {
-                const productDetails = await Product.findById(product.productId);
-                if (!productDetails) throw new Error("Product not found");
-                if (productDetails.quantity < product.quantity) throw new Error("Not enough stock");
-
-                // Update product stock
-                productDetails.quantity -= product.quantity;
-                productDetails.sold += product.quantity;
-                await productDetails.save();
-
-                return {
-                    productId: product.productId,
-                    title: productDetails.title,
-                    barcode: productDetails.barcode,
-                    quantity: product.quantity,
-                    price: productDetails.price,
-                    size: product.size, // שינוי זה לוקח את המידה מהבקשה
-                };
-            }));
-
-            // Calculate totalAmount
-            const totalAmount = orderProducts.reduce((acc, product) => acc + (product.quantity * product.price), 0);
-
-            const order = new Order({
-                userId,
-                products: orderProducts,
-                totalAmount,
-            });
-
-            return await order.save();
-        } catch (error) {
-            console.error("Error creating order:", error.message);
-            throw error;
-        }
-    },
-
- */
+    //create order
     createOrder: async (userId: string, products: IOrderProduct[]) => {
         try {
+            // תהליך יצירת המוצרים בהזמנה
             const orderProducts = await Promise.all(products.map(async product => {
                 const productDetails = await Product.findById(product.productId);
-                if (!productDetails) throw new Error("Product not found");
-                if (productDetails.quantity < product.quantity) throw new Error("Not enough stock");
+                if (!productDetails) throw new BizProductsError(404,"Product not found");
+                if (productDetails.quantity < product.quantity) throw new BizProductsError(400, "Not enough stock");
 
-                // Update product stock
+                // עדכון מלאי המוצר
                 productDetails.quantity -= product.quantity;
                 productDetails.sold += product.quantity;
                 await productDetails.save();
@@ -60,18 +24,20 @@ export const orderService = {
                     title: productDetails.title,
                     barcode: productDetails.barcode,
                     quantity: product.quantity,
-                    price: productDetails.price,
+                    price: productDetails.variants.find(v => v.size === product.size)?.price || 0,
                     size: product.size,
                 };
             }));
 
-            // Calculate totalAmount
+            // חישוב הסכום הכולל
             const totalAmount = orderProducts.reduce((acc, product) => acc + (product.quantity * product.price), 0);
 
+            // יצירת ההזמנה
             const order = new Order({
                 userId,
                 products: orderProducts,
                 totalAmount,
+                orderNumber: Date.now().toString(),
             });
 
             return await order.save();
@@ -81,7 +47,7 @@ export const orderService = {
         }
     },
 
-
+    //cancel order
     cancelOrder: async (orderId: string) => {
         const order = await Order.findById(orderId);
         if (!order) throw new Error("Order not found");
@@ -90,7 +56,7 @@ export const orderService = {
             throw new Error("Order is already cancelled");
         }
 
-        // Return the stock
+        // החזרת המלאי
         for (const product of order.products) {
             const productDetails = await Product.findById(product.productId);
             if (productDetails) {
@@ -104,23 +70,22 @@ export const orderService = {
         return await order.save();
     },
 
-
-
+    //get order
     getOrder: async (orderId: string) => {
         const order = await Order.findById(orderId).populate("products.productId");
         if (!order) throw new Error("Order not found");
         return order;
     },
 
+    //get orders by user
     getOrdersByUser: async (userId: string) => {
         return Order.find({ userId }).populate("products.productId");
     },
 
+    //get all orders
     getAllOrders: async () => {
-        const orders = await Order.find(({ status: { $ne: "cancelled" } })).populate("products.productId");
+        const orders = await Order.find({ status: { $ne: "cancelled" } }).populate("products.productId");
         const count = await Order.countDocuments({ status: { $ne: "cancelled" } });
         return { orders: orders.map(order => order.toObject()), count };
-
-        },
-
+    },
 };

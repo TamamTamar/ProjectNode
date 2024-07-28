@@ -15,7 +15,7 @@ const orderSchema = new Schema({
         type: String, enum: ["pending", "approved", "processing", "shipped", "delivered", "cancelled", "returned", "completed"],
        default: "pending" },
     createdAt: { type: Date, default: Date.now },
-   /*  orderNumber: { type: String, required: true }, */
+     orderNumber: { type: String, required: true }, 
 });
 
 export default orderSchema;

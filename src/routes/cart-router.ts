@@ -22,9 +22,9 @@ router.get('/', validateToken, async (req, res, next) => {
 //add to cart
 router.post('/add', ...validateAddToCart, async (req, res, next) => {
     try {
-        const { productId, quantity, size } = req.body;
+        const { productId, quantity, size, price } = req.body;
         const userId = req.payload._id;
-        const cart = await cartService.addProductToCart(userId, productId, quantity, size);
+        const cart = await cartService.addProductToCart(userId, productId, quantity, size, price);
         res.json(cart);
     } catch (e) {
         next(e);
@@ -35,7 +35,7 @@ router.post('/add', ...validateAddToCart, async (req, res, next) => {
 router.post('/remove', validateToken, async (req, res, next) => {
     try {
         const userId = req.payload._id;
-        const { productId} = req.body;
+        const { productId } = req.body;
         const cart = await cartService.removeProductFromCart(userId, productId);
         res.json(cart);
     } catch (e) {

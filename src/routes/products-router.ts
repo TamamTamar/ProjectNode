@@ -5,17 +5,18 @@ import { isAdmin } from "../middleware/is-admin";
 import isProductId from "../middleware/is-product-Id";
 import { validateToken } from "../middleware/validate-token";
 import upload from "../middleware/uploads";
+import BizProductsError from "../errors/BizProductsError";
 
 
 const router = Router();
 
 
 // Add product
-router.post("/", ...isAdmin, upload.single("image"), validateProduct, async (req, res, next) => {
+router.post("/", ...isAdmin, upload.single("image"), async (req, res, next) => {
   try {
     console.log("Payload:", req.payload); // הוספת דיבאג
     if (!req.payload) {
-      throw new Error("Invalid token");
+      throw new BizProductsError(401, "Invalid token");
     }
     const imageUrl = `http://localhost:8080/uploads/${req.file.filename}`;
     res.json({ imageUrl })
@@ -81,7 +82,7 @@ router.delete("/:id", ...isAdmin, isProductId, async (req, res, next) => {
  }); */
 
 
- //get allproducts
+ //get all products
 router.get("/", async (req, res, next) => {
   try {
     const products = await productService.getProducts();
