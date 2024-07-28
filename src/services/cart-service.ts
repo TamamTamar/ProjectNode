@@ -6,7 +6,7 @@ import BizProductsError from '../errors/BizProductsError';
 export const cartService = {
     getCartById: async (userId: string): Promise<ICartWithTotals | null> => {
         try {
-            const cart = await CartModel.findOne({ userId }).populate('items.productId');
+            const cart = await CartModel.findOne({ userId }).populate('items.variantId');
 
             if (!cart) {
                 return null;
@@ -38,7 +38,7 @@ export const cartService = {
 ): Promise<ICart | null> => {
     let cart = await CartModel.findOne({ userId });
 
-    const product = await Product.findById(variantId);
+    const product = await Product.findById(productId);
     if (!product) {
         throw new BizProductsError(404, 'Product not found');
     }
@@ -100,7 +100,8 @@ export const cartService = {
         return cart;
     },
 
-    updateQuantityInCart: async (userId: string, variantId: string, quantity: number): Promise<ICart | null> => {
+    updateQuantityInCart: async (userId: string,productId: string, variantId: string, quantity: number, ): Promise<ICart | null> => {
+        console.log(`Updating cart for userId: ${userId}, variantId: ${variantId}, quantity: ${quantity}`);
         
         const cart = await CartModel.findOne({ userId });
         if (!cart) {
@@ -109,9 +110,8 @@ export const cartService = {
         }
         
         const itemIndex = cart.items.findIndex((item) => item.variantId === variantId);
-        console.log(cart.items.findIndex((item) => item.variantId === variantId))
         if (itemIndex === -1) {
-            console.error(`Product not found in cart for userId: ${userId}`);
+            console.error(`Product not found in cart for variantId: ${variantId}`);
             throw new BizProductsError(404, 'Product not found in cart');
         }
         

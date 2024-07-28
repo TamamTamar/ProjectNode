@@ -35,8 +35,8 @@ router.post('/add', ...validateAddToCart, async (req, res, next) => {
 router.post('/remove', validateToken, async (req, res, next) => {
     try {
         const userId = req.payload._id;
-        const { productId } = req.body;
-        const cart = await cartService.removeProductFromCart(userId, productId);
+        const { variantId  } = req.body;
+        const cart = await cartService.removeProductFromCart(userId, variantId);
         res.json(cart);
     } catch (e) {
         next(e);
@@ -48,8 +48,8 @@ router.post('/remove', validateToken, async (req, res, next) => {
 router.patch('/update', validateToken, async (req, res, next) => {
     try {
         const userId = req.payload._id;
-        const { productId, quantity } = req.body;
-        const cart = await cartService.updateQuantityInCart(userId, productId, quantity);
+        const { productId, variantId, quantity } = req.body;
+        const cart = await cartService.updateQuantityInCart(userId, productId,variantId, quantity);
         res.json(cart);
     } catch (e) {
         next(e);
