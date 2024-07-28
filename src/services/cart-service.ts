@@ -27,93 +27,106 @@ export const cartService = {
         }
     },
 
-    addProductToCart: async (
-        userId: string, 
-        productId: string, 
-        variantId: string,  // Updated to include variantId
-        quantity: number, 
-        size: string,
-        price: number
-    ): Promise<ICart | null> => {
-        let cart = await CartModel.findOne({ userId });
-    
-        const product = await Product.findById(productId);
-        if (!product) {
-            throw new BizProductsError(404, 'Product not found');
-        }
-    
-        const variant = product.variants.find(v => v._id.toString() === variantId);
-        if (!variant) {
-            throw new BizProductsError(404, 'Variant not found');
-        }
-    
-        if (!cart) {
-            cart = new CartModel({
-                userId,
-                items: [{ 
-                    productId, 
-                    variantId,  // Include variantId here
-                    quantity, 
-                    size, 
-                    title: product.title, 
-                    price, 
-                    image: product.image
-                }]
-            });
-        } else {
-            const itemIndex = cart.items.findIndex((item) => item.productId === productId && item.size === size && item.variantId === variantId);
-    
-            if (itemIndex > -1) {
-                cart.items[itemIndex].quantity += quantity;
-            } else {
-                cart.items.push({ 
-                    productId, 
-                    variantId,  // Include variantId here
-                    quantity, 
-                    size, 
-                    title: product.title, 
-                    price, 
-                    image: product.image
-                });
-            }
-        }
-    
-        await cart.save();
-        return cart;
-    },
 
-    removeProductFromCart: async (userId: string, productId: string): Promise<ICart | null> => {
+ addProductToCart : async (
+    userId: string,
+    productId: string,
+    variantId: string,
+    quantity: number,
+    size: string,
+    price: number
+): Promise<ICart | null> => {
+    let cart = await CartModel.findOne({ userId });
+
+    const product = await Product.findById(variantId);
+    if (!product) {
+        throw new BizProductsError(404, 'Product not found');
+    }
+
+    const variant = product.variants.find(v => v._id.toString() === variantId);
+    if (!variant) {
+        throw new BizProductsError(404, 'Variant not found');
+    }
+
+    if (!cart) {
+        cart = new CartModel({
+            userId,
+            items: [
+                {
+                    productId,
+                    variantId,
+                    quantity,
+                    size,
+                    title: product.title,
+                    price: variant.price,
+                    image: product.image,
+                },
+            ],
+        });
+    } else {
+        const itemIndex = cart.items.findIndex(
+            item => item.productId === productId && item.size === size && item.variantId === variantId
+        );
+
+        if (itemIndex > -1) {
+            cart.items[itemIndex].quantity += quantity;
+        } else {
+            cart.items.push({
+                productId,
+                variantId,
+                quantity,
+                size,
+                title: product.title,
+                price: variant.price,
+                image: product.image,
+            });
+        }
+    }
+
+    await cart.save();
+    return cart;
+},
+
+    removeProductFromCart: async (userId: string, variantId: string): Promise<ICart | null> => {
         const cart = await CartModel.findOne({ userId });
 
         if (!cart) {
             throw new BizProductsError(404, 'Cart not found');
         }
 
-        cart.items = cart.items.filter((item) => item.productId !== productId);
+        cart.items = cart.items.filter((item) => item.variantId !== variantId);
 
         await cart.save();
         return cart;
     },
 
-    updateQuantityInCart: async (userId: string, productId: string, quantity: number): Promise<ICart | null> => {
+    updateQuantityInCart: async (userId: string, variantId: string, quantity: number): Promise<ICart | null> => {
+        
         const cart = await CartModel.findOne({ userId });
         if (!cart) {
-            throw new BizProductsError(404,'Cart not found');
+            console.error(`Cart not found for userId: ${userId}`);
+            throw new BizProductsError(404, 'Cart not found');
         }
-        const itemIndex = cart.items.findIndex((item) => item.productId === productId);
+        
+        const itemIndex = cart.items.findIndex((item) => item.variantId === variantId);
+        console.log(cart.items.findIndex((item) => item.variantId === variantId))
         if (itemIndex === -1) {
-            throw new BizProductsError(404,'Product not found in cart');
+            console.error(`Product not found in cart for userId: ${userId}`);
+            throw new BizProductsError(404, 'Product not found in cart');
         }
+        
         cart.items[itemIndex].quantity = quantity;
         await cart.save();
+        console.log(`Cart updated successfully for userId: ${userId}`);
+        
         return cart;
     },
-
+    
     clearCart: async (userId: string): Promise<ICart | null> => {
         const cart = await CartModel.findOne({ userId });
 
         if (!cart) {
-            throw new BizProductsError(404,'Cart not found');
+            throw new BizProductsError(404, 'Cart not found');
         }
 
         cart.items = [];

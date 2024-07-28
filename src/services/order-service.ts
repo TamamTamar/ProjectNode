@@ -11,11 +11,14 @@ export const orderService = {
             // תהליך יצירת המוצרים בהזמנה
             const orderProducts = await Promise.all(products.map(async product => {
                 const productDetails = await Product.findById(product.productId);
-                if (!productDetails) throw new BizProductsError(404,"Product not found");
-                if (productDetails.quantity < product.quantity) throw new BizProductsError(400, "Not enough stock");
+                if (!productDetails) throw new BizProductsError(404, "Product not found");
+
+                const variant = productDetails.variants.find(v => v.size === product.size);
+                if (!variant) throw new BizProductsError(404, "Variant not found");
+                if (variant.quantity < product.quantity) throw new BizProductsError(400, "Not enough stock");
 
                 // עדכון מלאי המוצר
-                productDetails.quantity -= product.quantity;
+                variant.quantity -= product.quantity;
                 productDetails.sold += product.quantity;
                 await productDetails.save();
 
@@ -24,7 +27,7 @@ export const orderService = {
                     title: productDetails.title,
                     barcode: productDetails.barcode,
                     quantity: product.quantity,
-                    price: productDetails.variants.find(v => v.size === product.size)?.price || 0,
+                    price: variant.price,
                     size: product.size,
                 };
             }));
@@ -60,7 +63,10 @@ export const orderService = {
         for (const product of order.products) {
             const productDetails = await Product.findById(product.productId);
             if (productDetails) {
-                productDetails.quantity += product.quantity;
+                const variant = productDetails.variants.find(v => v.size === product.size);
+                if (variant) {
+                    variant.quantity += product.quantity;
+                }
                 productDetails.sold -= product.quantity;
                 await productDetails.save();
             }

@@ -70,15 +70,14 @@ export type IJWTPayload = {
   _id: string;
   isAdmin: boolean;
 };
-export type IProduct = IProductInput & {
-  barcode: number;
-  createdAt: Date;
-  shoppingCart: string[];
-  quantity: number;
-  sold: number;
-  userId: string;
-};
 
+// טיפוס עבור גרסאות של מוצר
+export type IVariant = {
+  _id?: string;
+  size: string;
+  quantity: number;
+  price: number;
+};
 
 // טיפוס עבור פרטי מוצר בעת יצירה
 export type IProductInput = {
@@ -87,25 +86,26 @@ export type IProductInput = {
   description: string;
   image: IImage;
   alt: string;
-  price: number;
   variants: IVariant[];
 };
 
-// טיפוס עבור גרסאות של מוצר
-export type IVariant = {
-  _id?: string;
-  size: string;
-  quantity: number;
- 
-};
-
 // טיפוס עבור מוצר (כולל פרטים נוספים)
+export type IProduct = IProductInput & {
+  _id: string;
+  barcode: number;
+  createdAt: Date;
+  shoppingCart: string[];
+  sold: number;
+  userId: string;
+};
 
 // טיפוס עבור פרטי מוצר בהזמנה
 export type IOrderProduct = {
   productId: string;
   quantity: number;
   size: string;
+  price: number;
+  title: string;
 };
 
 // טיפוס עבור הזמנה

@@ -73,11 +73,10 @@ const products: IProductInput[] = [
       url: "http://localhost:8080/uploads/1721164164801-1721142311247-360.png",
     },
     alt: "image of something",
-    price: 222,
     variants: [
-      { size: "S", quantity: 10 },
-      { size: "M", quantity: 15},
-      { size: "L", quantity: 20 },
+      { size: "S", quantity: 10 ,price: 222},
+      { size: "M", quantity: 15, price: 222},
+      { size: "L", quantity: 20, price: 222},
     ],
   },
   {
@@ -88,11 +87,10 @@ const products: IProductInput[] = [
       url: "http://localhost:8080/uploads/1721164164801-1721142311247-360.png",
     },
     alt: "image of something",
-    price: 222,
     variants: [
-      { size: "S", quantity: 10 },
-      { size: "M", quantity: 15 },
-      { size: "L", quantity: 20 },
+      { size: "S", quantity: 10 , price: 222},
+      { size: "M", quantity: 15, price: 222},
+      { size: "L", quantity: 20 , price: 222},
     ],
   },
   {
@@ -103,11 +101,10 @@ const products: IProductInput[] = [
       url: "http://localhost:8080/uploads/1721164164801-1721142311247-360.png",
     },
     alt: "image of something",
-    price: 222,
     variants: [
-      { size: "S", quantity: 10},
-      { size: "M", quantity: 15},
-      { size: "L", quantity: 20 },
+      { size: "S", quantity: 10 , price: 222},
+      { size: "M", quantity: 15, price: 222},
+      { size: "L", quantity: 20, price: 222},
     ],
   },
 ];

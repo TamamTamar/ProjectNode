@@ -76,7 +76,6 @@ export const productService = {
       if (!variant) throw new BizProductsError(400, `Invalid size: ${update.size}`);
 
       variant.quantity += update.quantity;
-      product.quantity += update.quantity;
       await product.save();
       results.push(product);
     }

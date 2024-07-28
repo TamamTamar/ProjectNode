@@ -5,7 +5,7 @@ import { IProduct, IVariant } from "../../@types/@types";
 const VariantSchema = new Schema<IVariant>({
   size: { type: String, required: true },
   quantity: { type: Number, required: true },
-
+  price: { type: Number, required: true },
 });
 
 // הגדרת סקימה למוצר
@@ -18,7 +18,6 @@ const ProductSchema = new Schema<IProduct>({
   title: { type: String, required: true },
   subtitle: { type: String, required: true },
   description: { type: String, required: true },
-  price: { type: Number, required: true },
   image: {
     url: { type: String, required: true },
   },
