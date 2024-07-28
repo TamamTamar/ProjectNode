@@ -40,15 +40,15 @@ export type IUser = IUserInput & {
 // טיפוס עבור פריט בעגלת קניות
 export interface ICartItem {
   productId: string;
-  quantity: number;
+  variantId: string;
   title: string;
   price: number;
   size: string;
+  quantity: number;
   image: IImage;
 }
 
-// טיפוס עבור עגלת קניות
-export interface ICart extends Document {
+export interface ICart {
   userId: string;
   items: ICartItem[];
 }
@@ -87,14 +87,16 @@ export type IProductInput = {
   description: string;
   image: IImage;
   alt: string;
+  price: number;
   variants: IVariant[];
 };
 
 // טיפוס עבור גרסאות של מוצר
 export type IVariant = {
+  _id?: string;
   size: string;
   quantity: number;
-  price: number;
+ 
 };
 
 // טיפוס עבור מוצר (כולל פרטים נוספים)

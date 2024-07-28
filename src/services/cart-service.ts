@@ -3,11 +3,8 @@ import { ICart, ICartWithTotals } from '../@types/@types';
 import CartModel from '../db/models/cart-model';
 import BizProductsError from '../errors/BizProductsError';
 
-
 export const cartService = {
-
-
-    getCartById: async (userId: string): Promise<ICartWithTotals | null> => { // עדכון הטיפוס המוחזר
+    getCartById: async (userId: string): Promise<ICartWithTotals | null> => {
         try {
             const cart = await CartModel.findOne({ userId }).populate('items.productId');
 
@@ -15,76 +12,89 @@ export const cartService = {
                 return null;
             }
 
-            // חישוב כמות מוצרים סך הכל והמחיר של כל המוצרים יחד
             const totalQuantity = cart.items.reduce((total, item) => total + item.quantity, 0);
             const totalPrice = cart.items.reduce((total, item) => total + (item.quantity * item.price), 0);
 
-            // הוספת חישובים למידע המוחזר
             return {
                 ...cart.toObject(),
                 totalQuantity,
                 totalPrice
-            } as ICartWithTotals; // שינוי טיפוס המידע המוחזר
+            } as ICartWithTotals;
 
         } catch (error) {
-            console.error("Error fetching cart:", error); // Debugging
+            console.error("Error fetching cart:", error);
             throw new BizProductsError(400, 'Error fetching cart');
         }
     },
 
-    addProductToCart: async (userId: string, productId: string, quantity: number, size: string ,price: number): Promise<ICart | null> => {
-        // First, find the cart for the user
+    addProductToCart: async (
+        userId: string, 
+        productId: string, 
+        variantId: string,  // Updated to include variantId
+        quantity: number, 
+        size: string,
+        price: number
+    ): Promise<ICart | null> => {
         let cart = await CartModel.findOne({ userId });
-
-        // Check if the product exists in the database
+    
         const product = await Product.findById(productId);
         if (!product) {
             throw new BizProductsError(404, 'Product not found');
         }
-
-        // If no cart exists, create a new cart
+    
+        const variant = product.variants.find(v => v._id.toString() === variantId);
+        if (!variant) {
+            throw new BizProductsError(404, 'Variant not found');
+        }
+    
         if (!cart) {
             cart = new CartModel({
                 userId,
-                items: [{ productId, quantity, size: size, title: product.title, price: price, image: product.image }]
+                items: [{ 
+                    productId, 
+                    variantId,  // Include variantId here
+                    quantity, 
+                    size, 
+                    title: product.title, 
+                    price, 
+                    image: product.image
+                }]
             });
-        }
-        // If the cart exists, check if the product already exists in the cart
-        else {
-            const itemIndex = cart.items.findIndex((item) => item.productId === productId && item.size === size);
-
-            // If the product exists, update the quantity
+        } else {
+            const itemIndex = cart.items.findIndex((item) => item.productId === productId && item.size === size && item.variantId === variantId);
+    
             if (itemIndex > -1) {
                 cart.items[itemIndex].quantity += quantity;
-            }
-
-            // If the product does not exist, add it to the cart
-            else {
-                cart.items.push({ productId, quantity, size: size, title: product.title, price: price, image: product.image });
+            } else {
+                cart.items.push({ 
+                    productId, 
+                    variantId,  // Include variantId here
+                    quantity, 
+                    size, 
+                    title: product.title, 
+                    price, 
+                    image: product.image
+                });
             }
         }
-
-        // Save the cart to the database
+    
         await cart.save();
         return cart;
     },
 
     removeProductFromCart: async (userId: string, productId: string): Promise<ICart | null> => {
-        // מצא את העגלה על פי userId
         const cart = await CartModel.findOne({ userId });
 
         if (!cart) {
             throw new BizProductsError(404, 'Cart not found');
         }
 
-        // סנן את המוצרים כדי להסיר את כל המוצרים עם אותו productId
         cart.items = cart.items.filter((item) => item.productId !== productId);
 
         await cart.save();
         return cart;
     },
 
-    //update quantity in cart
     updateQuantityInCart: async (userId: string, productId: string, quantity: number): Promise<ICart | null> => {
         const cart = await CartModel.findOne({ userId });
         if (!cart) {
@@ -99,29 +109,6 @@ export const cartService = {
         return cart;
     },
 
-   /*  removeProductFromCart: async (userId: string, productId: string, quantity: number): Promise<ICart | null> => {
-        const cart = await CartModel.findOne({ userId });
-
-        if (!cart) {
-            throw new Error('Cart not found');
-        }
-
-        const itemIndex = cart.items.findIndex((item) => item.productId === productId);
-
-        if (itemIndex > -1) {
-            if (cart.items[itemIndex].quantity > quantity) {
-                cart.items[itemIndex].quantity -= quantity;
-            } else {
-                cart.items.splice(itemIndex, 1);
-            }
-            await cart.save();
-            return cart;
-        }
-
-        throw new BizProductsError(404,'Product not found in cart');
-    },
- */
-
     clearCart: async (userId: string): Promise<ICart | null> => {
         const cart = await CartModel.findOne({ userId });
 
@@ -134,5 +121,4 @@ export const cartService = {
 
         return cart;
     }
-
 };
