@@ -7,15 +7,13 @@ import { cartService } from "../services/cart-service";
 const _validateAddToCart = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId = req.payload._id;
-        const { productId, variantId, quantity, size ,price} = req.body;
+        const { productId, variantId, quantity, size } = req.body;
 
         console.log('Received variantId:', variantId); // בדיקת שליחה נכונה
 
         if (!userId) {
             return next(new BizProductsError(401, "User not authenticated"));
         }
-
-        await cartService.addProductToCart(userId, productId, variantId, quantity, size,price );
 
         next();
     } catch (error) {

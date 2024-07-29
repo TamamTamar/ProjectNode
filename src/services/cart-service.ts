@@ -28,31 +28,56 @@ export const cartService = {
     },
 
 
- addProductToCart : async (
-    userId: string,
-    productId: string,
-    variantId: string,
-    quantity: number,
-    size: string,
-    price: number
-): Promise<ICart | null> => {
-    let cart = await CartModel.findOne({ userId });
+    addProductToCart: async (
+        userId: string,
+        productId: string,
+        variantId: string,
+        quantity: number,
+        size: string,
 
-    const product = await Product.findById(productId);
-    if (!product) {
-        throw new BizProductsError(404, 'Product not found');
-    }
-
-    const variant = product.variants.find(v => v._id.toString() === variantId);
-    if (!variant) {
-        throw new BizProductsError(404, 'Variant not found');
-    }
-
-    if (!cart) {
-        cart = new CartModel({
-            userId,
-            items: [
-                {
+    ): Promise<ICart | null> => {
+        console.log(`Starting addProductToCart for user: ${userId} with product: ${productId} and variant: ${variantId}`);
+        let cart = await CartModel.findOne({ userId });
+    
+        const product = await Product.findById(productId);
+        if (!product) {
+            console.error(`Product not found for productId: ${productId}`);
+            throw new BizProductsError(404, 'Product not found');
+        }
+    
+        const variant = product.variants.find(v => v._id.toString() === variantId);
+        if (!variant) {
+            console.error(`Variant not found for variantId: ${variantId}`);
+            throw new BizProductsError(404, 'Variant not found');
+        }
+    
+        if (!cart) {
+            console.log(`No cart found for userId: ${userId}, creating new cart.`);
+            cart = new CartModel({
+                userId,
+                items: [
+                    {
+                        productId,
+                        variantId,
+                        quantity,
+                        size,
+                        title: product.title,
+                        price: variant.price,
+                        image: product.image,
+                    },
+                ],
+            });
+        } else {
+            const itemIndex = cart.items.findIndex(
+                item => item.productId === productId && item.size === size && item.variantId === variantId
+            );
+    
+            if (itemIndex > -1) {
+                console.log(`Item found in cart, updating quantity for userId: ${userId}, productId: ${productId}, variantId: ${variantId}`);
+                cart.items[itemIndex].quantity += quantity;
+            } else {
+                console.log(`Item not found in cart, adding new item for userId: ${userId}, productId: ${productId}, variantId: ${variantId}`);
+                cart.items.push({
                     productId,
                     variantId,
                     quantity,
@@ -60,33 +85,14 @@ export const cartService = {
                     title: product.title,
                     price: variant.price,
                     image: product.image,
-                },
-            ],
-        });
-    } else {
-        const itemIndex = cart.items.findIndex(
-            item => item.productId === productId && item.size === size && item.variantId === variantId
-        );
-
-        if (itemIndex > -1) {
-            cart.items[itemIndex].quantity += quantity;
-        } else {
-            cart.items.push({
-                productId,
-                variantId,
-                quantity,
-                size,
-                title: product.title,
-                price: variant.price,
-                image: product.image,
-            });
+                });
+            }
         }
-    }
-
-    await cart.save();
-    return cart;
-},
-
+    
+        await cart.save();
+        console.log(`Cart saved successfully for userId: ${userId}`);
+        return cart;
+    },
     removeProductFromCart: async (userId: string, variantId: string): Promise<ICart | null> => {
         const cart = await CartModel.findOne({ userId });
 
