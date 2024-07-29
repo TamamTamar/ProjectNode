@@ -15,6 +15,7 @@ const _validateAddToCart = async (req: Request, res: Response, next: NextFunctio
             return next(new BizProductsError(401, "User not authenticated"));
         }
 
+
         next();
     } catch (error) {
         next(error);
