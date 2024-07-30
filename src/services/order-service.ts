@@ -89,9 +89,9 @@ export const orderService = {
     },
 
     //get all orders
-    getAllOrders: async () => {
+/*     getAllOrders: async () => {
         const orders = await Order.find({ status: { $ne: "cancelled" } }).populate("products.productId");
         const count = await Order.countDocuments({ status: { $ne: "cancelled" } });
         return { orders: orders.map(order => order.toObject()), count };
-    },
+    }, */
 };

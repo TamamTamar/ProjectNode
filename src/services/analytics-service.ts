@@ -24,27 +24,32 @@ export const analyticsService = {
         const orders = await Order.find().populate({
             path: 'userId',
             select: 'name', // אכלוס השדה name מתוך userId
-        }).populate({
-            path: 'products.productId',
-            select: 'title barcode',
-        });
-
-        return orders.map(order => ({
-            orderId: order._id,
-            userId: order.userId._id,
-            userName: order.userId.name,
-            products: order.products.map(product => ({
-                productId: product.productId._id,
-                title: product.productId.title,
-                barcode: product.productId.barcode,
-                quantity: product.quantity,
-                price: product.price,
+        }).populate('products.productId');
+    
+        const count = await Order.countDocuments(); // ספירת כמות ההזמנות
+    
+        return {
+            orders: orders.map(order => ({
+                orderId: order._id,
+                userId: order.userId._id, // הוספת השדה name של המשתמש
+                products: order.products.map(product => ({
+                    productId: product.productId._id,
+                    title: product.title, // שימוש ב- productId כדי לקבל את ה-title
+                    barcode: product.barcode, // שימוש ב- productId כדי לקבל את ה-barcode
+                    quantity: product.quantity,
+                    price: product.price,
+                })),
+                totalAmount: order.totalAmount,
+                status: order.status,
+                createdAt: order.createdAt,
             })),
-            totalAmount: order.totalAmount,
-            status: order.status,
-            createdAt: order.createdAt,
-        }));
+            count // הוספת כמות ההזמנות לפלט
+        };
     },
+    
+    
+
+
 
     // get sales by date
     getSalesByDate: async (startDate: Date, endDate: Date) => {
@@ -107,7 +112,7 @@ export const analyticsService = {
     },
 
     // get top selling products
-    getTopSellingProducts: async () => {
+/*     getTopSellingProducts: async () => {
         const products = await Product.find().sort({ 'variants.sold': -1 }).limit(5);
         return products.map(product => ({
             title: product.title,
@@ -118,7 +123,7 @@ export const analyticsService = {
                 totalRevenue: variant.sold * variant.price,
             })),
         }));
-    },
+    }, */
 
     // get product sales
     getProductSales: async (productId: string) => {
@@ -127,7 +132,7 @@ export const analyticsService = {
             title: product.title,
             variants: product.variants.map(variant => ({
                 size: variant.size,
-                sold: variant.sold,
+                //sold: variant.sold,
             })),
         };
     },
@@ -156,7 +161,7 @@ export const analyticsService = {
     },
 
     // get users with most orders
-    getUsersWithMostOrders: async () => {
+  /*   getUsersWithMostOrders: async () => {
         const orders = await Order.aggregate([
             {
                 $group: {
@@ -196,5 +201,5 @@ export const analyticsService = {
         });
 
         return result;
-    },
+    }, */
 };

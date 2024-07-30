@@ -42,11 +42,14 @@ router.get("/sales-by-date", ...isAdmin, async (req, res, next) => {
         }
 
         const sales = await analyticsService.getSalesByDate(start, end);
+        console.log('Sales data:', sales);
         res.json(sales);
     } catch (e) {
         next(e);
     }
 });
+
+
 
 
 //get inventory
@@ -94,22 +97,22 @@ router.patch("/status/:orderId", ...isAdmin, isStatus, async (req, res, next) =>
 });
 
 //get top selling products
-router.get("/products/top-selling", ...isAdmin, async (req, res, next) => {
+/* router.get("/products/top-selling", ...isAdmin, async (req, res, next) => {
     try {
         const topSellingProducts = await analyticsService.getTopSellingProducts();
         res.json(topSellingProducts);
     } catch (e) {
         next(e);
     }
-});
+}); */
 //get users with most orders
-router.get("/active-users", ...isAdmin, async (req, res, next) => {
+/* router.get("/active-users", ...isAdmin, async (req, res, next) => {
     try {
         const usersByOrdersCount = await analyticsService.getUsersWithMostOrders();
         res.json(usersByOrdersCount);
     } catch (e) {
         next(e);
     }
-});
+}); */
 
 export { router as analyticsRouter };

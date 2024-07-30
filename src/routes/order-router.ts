@@ -43,7 +43,7 @@ router.get("/user/:userId", isAdminOrSelfUser, async (req, res, next) => {
 });
 
 //get all orders
-router.get("/", ...isAdmin, async (_, res, next) => {
+/* router.get("/", ...isAdmin, async (_, res, next) => {
     try {
         const { orders, count } = await orderService.getAllOrders();
         const response = { AmountsOrders: count, orders }
@@ -51,7 +51,7 @@ router.get("/", ...isAdmin, async (_, res, next) => {
     } catch (e) {
         next(e);
     }
-});
+}); */
 
 //cancel order
 router.patch("/cancel/:orderId", ...isAdmin, async (req, res, next) => {
