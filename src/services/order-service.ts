@@ -8,7 +8,7 @@ export const orderService = {
     //create order
     createOrder: async (userId: string, products: IOrderProduct[]) => {
         try {
-            // תהליך יצירת המוצרים בהזמנה
+            // Process order products
             const orderProducts = await Promise.all(products.map(async product => {
                 const productDetails = await Product.findById(product.productId);
                 if (!productDetails) throw new BizProductsError(404, "Product not found");
@@ -17,7 +17,7 @@ export const orderService = {
                 if (!variant) throw new BizProductsError(404, "Variant not found");
                 if (variant.quantity < product.quantity) throw new BizProductsError(400, "Not enough stock");
 
-                // עדכון מלאי המוצר
+                // Update product stock
                 variant.quantity -= product.quantity;
                 productDetails.sold += product.quantity;
                 await productDetails.save();
@@ -32,15 +32,15 @@ export const orderService = {
                 };
             }));
 
-            // חישוב הסכום הכולל
+            // Calculate total amount
             const totalAmount = orderProducts.reduce((acc, product) => acc + (product.quantity * product.price), 0);
 
-            // יצירת ההזמנה
+            // Create the order
             const order = new Order({
                 userId,
                 products: orderProducts,
                 totalAmount,
-                orderNumber: Date.now().toString(),
+                orderNumber: `ORD-${Date.now().toString()}`, // You can use a more sophisticated method for order numbers
             });
 
             return await order.save();
@@ -49,7 +49,6 @@ export const orderService = {
             throw error;
         }
     },
-
     //cancel order
     cancelOrder: async (orderId: string) => {
         const order = await Order.findById(orderId);

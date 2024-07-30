@@ -30,6 +30,7 @@ export const analyticsService = {
     
         return {
             orders: orders.map(order => ({
+                orderNumber: order.orderNumber,
                 orderId: order._id,
                 userId: order.userId._id, // הוספת השדה name של המשתמש
                 products: order.products.map(product => ({
@@ -42,11 +43,17 @@ export const analyticsService = {
                 totalAmount: order.totalAmount,
                 status: order.status,
                 createdAt: order.createdAt,
+
             })),
             count // הוספת כמות ההזמנות לפלט
         };
     },
     
+    /*     getAllOrders: async () => {
+        const orders = await Order.find({ status: { $ne: "cancelled" } }).populate("products.productId");
+        const count = await Order.countDocuments({ status: { $ne: "cancelled" } });
+        return { orders: orders.map(order => order.toObject()), count };
+    }, */
     
 
 

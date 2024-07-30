@@ -10,10 +10,10 @@ const router = Router();
 
 
 //get all orders
-router.get("/all-orders", ...isAdmin, async (req, res, next) => {
+router.get("/all-orders", isAdmin, async (req, res, next) => {
     try {
         const orders = await analyticsService.getAllOrders();
-        res.json(orders);
+        res.json(orders); // Ensure this sends an array
     } catch (e) {
         next(e);
     }
@@ -42,7 +42,6 @@ router.get("/sales-by-date", ...isAdmin, async (req, res, next) => {
         }
 
         const sales = await analyticsService.getSalesByDate(start, end);
-        console.log('Sales data:', sales);
         res.json(sales);
     } catch (e) {
         next(e);
