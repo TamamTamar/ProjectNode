@@ -6,6 +6,7 @@ const cartItemSchema = Joi.object({
   quantity: Joi.number().min(1).required(),
   size: Joi.string().valid("S", "M", "L").required(),
   price: Joi.number().min(1).required(),
+  
 });
 
 const cartSchema = Joi.object({

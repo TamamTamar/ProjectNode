@@ -1,4 +1,4 @@
-/* import Order from "../db/models/order-model";
+import Order from "../db/models/order-model";
 import Product from "../db/models/product-model";
 import User from "../db/models/user-model";
 import bizProductsError from "../errors/BizProductsError";
@@ -198,4 +198,3 @@ export const analyticsService = {
         return result;
     },
 };
- */

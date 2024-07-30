@@ -1,8 +1,8 @@
 import _ from "underscore";
-import { IProductInput, IVariant } from "../@types/@types";
+import { IProductInput } from "../@types/@types";
 import Product from "../db/models/product-model";
-import { Logger } from "../logs/logger";
 import BizProductsError from "../errors/BizProductsError";
+import { Logger } from "../logs/logger";
 
 const generateBizNumber = async () => {
   // Generate random bizNumber:

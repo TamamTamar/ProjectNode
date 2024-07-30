@@ -1,7 +1,6 @@
-import { NextFunction, Request, Response } from "express";// Assuming the function is in services/cart-service
-import { validateToken } from "./validate-token";
+import { NextFunction, Request, Response } from "express"; // Assuming the function is in services/cart-service
 import BizProductsError from "../errors/BizProductsError";
-import { cartService } from "../services/cart-service";
+import { validateToken } from "./validate-token";
 
 // Middleware to validate product and cart ownership
 const _validateAddToCart = async (req: Request, res: Response, next: NextFunction) => {
