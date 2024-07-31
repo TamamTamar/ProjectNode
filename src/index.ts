@@ -1,19 +1,18 @@
+import cors from 'cors';
 import express, { json } from "express";
-import usersRouter from "./routes/users-router";
-import notFound from "./middleware/not-found";
-import connect from "./db/connection";
-import configDevEnv from "../config";
-import errorHandler from "./middleware/error-handler";
 import morgan from "morgan";
+import configDevEnv from "../config";
+import connect from "./db/connection";
+import errorHandler from "./middleware/error-handler";
+import notFound from "./middleware/not-found";
+import { analyticsRouter } from "./routes/analytics-router";
+import { cartRouter } from "./routes/cart-router";
+import { messageRouter } from "./routes/message-router";
+import { orderRouter } from "./routes/order-router";
 import { productRouter } from "./routes/products-router";
-import { Logger } from "./logs/logger";
+import usersRouter from "./routes/users-router";
 configDevEnv();
 connect();
-import cors from 'cors';
-import { analyticsRouter } from "./routes/analytics-router";
-import { orderRouter } from "./routes/order-router";
-import upload from "./middleware/uploads";
-import { cartRouter } from "./routes/cart-router";
 
 
 
@@ -33,6 +32,7 @@ app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/analytics", analyticsRouter);
 app.use("/api/v1/orders", orderRouter);
+app.use("/api/v1/messages", messageRouter);
 app.use(express.static("public"));
 app.use(errorHandler);
 app.use(notFound);

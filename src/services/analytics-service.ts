@@ -1,7 +1,10 @@
+import { IMessage } from "../@types/@types";
+import Message from "../db/models/message-model";
 import Order from "../db/models/order-model";
 import Product from "../db/models/product-model";
 import User from "../db/models/user-model";
 import bizProductsError from "../errors/BizProductsError";
+import { Logger } from "../logs/logger";
 
 export const analyticsService = {
 
@@ -39,6 +42,7 @@ export const analyticsService = {
                     barcode: product.barcode, // שימוש ב- productId כדי לקבל את ה-barcode
                     quantity: product.quantity,
                     price: product.price,
+                    size: product.size,
                 })),
                 totalAmount: order.totalAmount,
                 status: order.status,
@@ -166,6 +170,7 @@ export const analyticsService = {
 
         return order;
     },
+
 
     // get users with most orders
   /*   getUsersWithMostOrders: async () => {

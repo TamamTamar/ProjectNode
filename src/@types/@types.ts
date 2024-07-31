@@ -141,3 +141,9 @@ export type IUpdateUserType = {
     zip: number;
   };
 };
+export type IMessage ={
+  fullName: string;
+  email: string;
+  message: string;
+  createdAt?: Date;
+}
