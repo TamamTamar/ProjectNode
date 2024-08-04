@@ -1,11 +1,10 @@
 
-import { IUser } from "../@types/@types";
-import { Logger } from "../logs/logger";
-import { usersService } from "../services/users-service";
-import { productService } from "../services/product-service";
-import { users, products } from "./initial-data";
 import User from "../db/models/user-model";
-import Card from "./models/product-model";
+import { Logger } from "../logs/logger";
+import { productService } from "../services/product-service";
+import { usersService } from "../services/users-service";
+import { products, users } from "./initial-data";
+import { default as Card, default as Product } from "./models/product-model";
 
 const initDB = async () => {
   try {
@@ -25,8 +24,8 @@ const initDB = async () => {
       }
     }
 
-    const cardsCount = await Card.countDocuments();
-    if (cardsCount >= 3) {
+    const productsCount = await Product.countDocuments();
+    if (productsCount >= 6) {
       Logger.log("3 or more cards already exist. Skipping card initialization.");
       return;
     }
