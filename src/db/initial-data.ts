@@ -84,7 +84,7 @@ const products: IProductInput[] = [
     subtitle: "Chic blouse for professional and casual wear",
     description: "Versatile blouse that pairs well with skirts or pants.\nElegant design with a comfortable fit.",
     image: {
-      url: "https://projectnode-vvte.onrender.com/uploads/elegant_blouse.png",
+      url: "https://projectnode-vvte.onrender.com/uploads/Elegant_Blouse.png",
     },
     alt: "image of an elegant blouse",
     variants: [
