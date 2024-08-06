@@ -20,7 +20,7 @@ const app = express();
 
 app.use(json());
 app.use(morgan("dev"));
-app.use(cors({ origin: ["http://localhost:5173", "http://localhost:5174",] }));
+app.use(cors());
 
 // נתיב להעלאת תמונת מוצר
 /* app.post('/api/v1/products/upload', upload.single('image'), (req, res) => {
