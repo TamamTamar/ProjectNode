@@ -38,6 +38,6 @@ app.use(errorHandler);
 app.use(notFound);
 
 app.listen(8080, () => {
-  console.log("Server is running on http://68.183.45.191");
+  console.log("Server is running on https://finalproject-store.onrender.com/");
   console.log(`App is running in ${process.env.NODE_ENV} mode`);
 });

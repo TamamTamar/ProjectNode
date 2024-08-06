@@ -70,7 +70,7 @@ const products: IProductInput[] = [
     subtitle: "Light and airy summer dress",
     description: "Perfect for hot days and casual outings.\nMade from breathable fabric for ultimate comfort.",
     image: {
-      url: "http://68.183.45.191/uploads/summer_dress.png",
+      url: "https://finalproject-store.onrender.com//uploads/summer_dress.png",
     },
     alt: "image of a summer dress",
     variants: [
@@ -84,7 +84,7 @@ const products: IProductInput[] = [
     subtitle: "Chic blouse for professional and casual wear",
     description: "Versatile blouse that pairs well with skirts or pants.\nElegant design with a comfortable fit.",
     image: {
-      url: "http://68.183.45.191/uploads/elegant_blouse.png",
+      url: "https://finalproject-store.onrender.com//uploads/elegant_blouse.png",
     },
     alt: "image of an elegant blouse",
     variants: [
@@ -98,7 +98,7 @@ const products: IProductInput[] = [
     subtitle: "Comfortable everyday t-shirt",
     description: "Soft cotton t-shirt available in multiple colors.\nIdeal for casual wear or layering.",
     image: {
-      url: "http://68.183.45.191/uploads/casual_tshirt.png",
+      url: "https://finalproject-store.onrender.com//uploads/casual_tshirt.png",
     },
     alt: "image of a casual t-shirt",
     variants: [
@@ -112,7 +112,7 @@ const products: IProductInput[] = [
     subtitle: "Flowing and modest maxi skirt",
     description: "Elegant and modest maxi skirt perfect for various occasions.\nMade from soft and comfortable fabric.",
     image: {
-      url: "http://68.183.45.191/uploads/modest_maxi_skirt.png",
+      url: "https://finalproject-store.onrender.com//uploads/modest_maxi_skirt.png",
     },
     alt: "image of a modest maxi skirt",
     variants: [
@@ -126,7 +126,7 @@ const products: IProductInput[] = [
     subtitle: "Professional office skirt",
     description: "Elegant skirt suitable for office and formal occasions.\nMade from high-quality fabric for a polished look.",
     image: {
-      url: "http://68.183.45.191/uploads/office_skirt.png",
+      url: "https://finalproject-store.onrender.com//uploads/office_skirt.png",
     },
     alt: "image of an office skirt",
     variants: [
@@ -140,7 +140,7 @@ const products: IProductInput[] = [
     subtitle: "Warm and stylish winter coat",
     description: "Stay warm in style with this luxurious winter coat.\nPerfect for cold weather and fashion-forward outfits.",
     image: {
-      url: "http://68.183.45.191/uploads/winter_coat.png",
+      url: "https://finalproject-store.onrender.com//uploads/winter_coat.png",
     },
     alt: "image of a winter coat",
     variants: [
