@@ -11,6 +11,7 @@ import { messageRouter } from "./routes/message-router";
 import { orderRouter } from "./routes/order-router";
 import { productRouter } from "./routes/products-router";
 import usersRouter from "./routes/users-router";
+import path from 'path';
 configDevEnv();
 connect();
 
@@ -26,6 +27,9 @@ app.use(cors());
 /* app.post('/api/v1/products/upload', upload.single('image'), (req, res) => {
   res.send('File uploaded successfully');
 }); */
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
+});
 
 app.use("/api/v1/cart", cartRouter)
 app.use("/api/v1/users", usersRouter);
