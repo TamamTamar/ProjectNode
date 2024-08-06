@@ -10,7 +10,7 @@ const router = Router();
 
 
 //get all orders
-router.get("/all-orders", isAdmin, async (req, res, next) => {
+router.get("/all-orders", ...isAdmin, async (req, res, next) => {
     try {
         const orders = await analyticsService.getAllOrders();
         res.json(orders); // Ensure this sends an array
