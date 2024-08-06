@@ -11,7 +11,6 @@ import { messageRouter } from "./routes/message-router";
 import { orderRouter } from "./routes/order-router";
 import { productRouter } from "./routes/products-router";
 import usersRouter from "./routes/users-router";
-import path from 'path';
 configDevEnv();
 connect();
 
@@ -21,15 +20,16 @@ const app = express();
 
 app.use(json());
 app.use(morgan("dev"));
-app.use(cors());
+app.use(cors({
+  origin: 'https://finalproject-store.onrender.com', // כתובת המקור שממנו את מאפשרת בקשות
+  methods: 'GET,POST,PUT,DELETE', // שיטות HTTP מותרות
+  credentials: true // אם את צריכה לשלוח עוגיות עם הבקשות
+}));
 
 // נתיב להעלאת תמונת מוצר
 /* app.post('/api/v1/products/upload', upload.single('image'), (req, res) => {
   res.send('File uploaded successfully');
 }); */
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
-});
 
 app.use("/api/v1/cart", cartRouter)
 app.use("/api/v1/users", usersRouter);
