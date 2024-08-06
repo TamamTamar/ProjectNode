@@ -20,7 +20,7 @@ const app = express();
 
 app.use(json());
 app.use(morgan("dev"));
-app.use(cors({ origin: ["http://localhost:5173", "http://localhost:5174"] }));
+app.use(cors({ origin: ["http://localhost:5173", "http://localhost:5174",] }));
 
 // נתיב להעלאת תמונת מוצר
 /* app.post('/api/v1/products/upload', upload.single('image'), (req, res) => {
@@ -38,6 +38,6 @@ app.use(errorHandler);
 app.use(notFound);
 
 app.listen(8080, () => {
-  console.log("Server is running on http://localhost:8080");
+  console.log("Server is running on http://68.183.45.191");
   console.log(`App is running in ${process.env.NODE_ENV} mode`);
 });

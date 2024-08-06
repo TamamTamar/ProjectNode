@@ -18,7 +18,7 @@ router.post("/", ...isAdmin, upload.single("image"), async (req, res, next) => {
     if (!req.payload) {
       throw new BizProductsError(401, "Invalid token");
     }
-    const imageUrl = `http://localhost:8080/uploads/${req.file.filename}`;
+    const imageUrl = `http://68.183.45.191/uploads/${req.file.filename}`;
     res.json({ imageUrl })
     const productData = { ...req.body, image: { url: imageUrl, alt: req.body.alt } };
     const result = await productService.createProduct(productData, req.payload._id);
@@ -35,7 +35,7 @@ router.put("/:id", ...isAdmin, upload.single("image"), async (req, res, next) =>
     if (!req.payload) {
       throw new Error("Invalid token");
     }
-    const imageUrl = req.file ? `http://localhost:8080/uploads/${req.file.filename}` : req.body.imageUrl;
+    const imageUrl = req.file ? `http://68.183.45.191/uploads/${req.file.filename}` : req.body.imageUrl;
     const productData = { ...req.body, image: { url: imageUrl, alt: req.body.alt } };
     const updatedProduct = await productService.updateProduct(req.params.id, productData);
     res.json(updatedProduct);
@@ -82,7 +82,7 @@ router.delete("/:id", ...isAdmin, isProductId, async (req, res, next) => {
  }); */
 
 
- //get all products
+//get all products
 router.get("/", async (req, res, next) => {
   try {
     const products = await productService.getProducts();
