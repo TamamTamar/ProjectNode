@@ -1,8 +1,10 @@
+import { Router } from "express";
 import { IMessage } from "../@types/@types";
 import { isAdmin } from "../middleware/is-admin";
 import { analyticsService } from "../services/analytics-service";
 import { messageService } from "../services/message-service";
-import router from "./users-router";
+
+const router = Router();
 
 //create new message
 router.post('/send-message', async (req, res, next) => {
