@@ -39,7 +39,8 @@ app.use(errorHandler);
 app.use(notFound);
 
 //start the server:
-app.listen(8080, () => {
-  console.log("Server is running on http://localhost:8080");
+const port = process.env.PORT || 8080;
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
   console.log(`App is running in ${process.env.NODE_ENV} mode`);
 });
