@@ -9,7 +9,6 @@ import { Logger } from "./logs/logger";
 import cors from 'cors';
 import { analyticsRouter } from "./routes/analytics-router";
 import { orderRouter } from "./routes/order-router";
-import path from "path";
 import { cartRouter } from "./routes/cart-router";
 import { messageRouter } from "./routes/message-router";
 import { productRouter } from "./routes/products-router";
@@ -17,8 +16,6 @@ import { usersRouter } from "./routes/users-router";
 
 configDevEnv();
 connect();
-
-Logger.error("hi");
 
 const app = express();
 console.log(process.env.JWT_SECRET);

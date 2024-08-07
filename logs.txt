@@ -1,17 +1,3 @@
 3 or more users already exist. Skipping user initialization.
 3 or more cards already exist. Skipping card initialization.
 Database Connected
-3 or more users already exist. Skipping user initialization.
-5205230
-3807892
-9934543
-9814317
-3063844
-1664995
-Database Connected
-3 or more users already exist. Skipping user initialization.
-3 or more cards already exist. Skipping card initialization.
-Database Connected
-3 or more users already exist. Skipping user initialization.
-3 or more cards already exist. Skipping card initialization.
-Database Connected
