@@ -42,6 +42,7 @@ export const orderService = {
 
             // Create the order with user's name
             const order = new Order({
+                userId,
                 userName: `${user.name.first} ${user.name.middle || ''} ${user.name.last}`, // Format the user's name
                 products: orderProducts,
                 totalAmount,
