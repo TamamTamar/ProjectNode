@@ -91,7 +91,7 @@ export const orderService = {
 
     // Get orders by user
     getOrdersByUser: async (userId: string) => {
-        return Order.find({ userName: userId }).populate("products.productId");
+        return Order.find({ userId }).populate("products.productId");
     },
 
     // Get all orders

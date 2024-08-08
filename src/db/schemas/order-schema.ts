@@ -2,6 +2,7 @@ import { Schema } from "mongoose";
 import { IUser } from "../../@types/@types";
 
 const orderSchema = new Schema({
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     userName: { type: String, required: true }, // Replace userId with userName
     products: [{
         title: { type: String, required: true },
