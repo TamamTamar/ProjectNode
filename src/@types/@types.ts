@@ -110,7 +110,7 @@ export type IOrderProduct = {
 
 // טיפוס עבור הזמנה
 export type IOrder = {
-  userId: string;
+  userName
   products: IOrderProduct[];
   totalAmount: number;
   status: string;
