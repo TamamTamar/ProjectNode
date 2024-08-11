@@ -24,7 +24,7 @@ export const analyticsService = {
 
     // get all orders
     getAllOrders: async () => {
-        const orders = await Order.find().populate('products.productId');
+        const orders = await Order.find().populate('products.productId').lean();
 
         const count = await Order.countDocuments(); // ספירת כמות ההזמנות
 
