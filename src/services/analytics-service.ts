@@ -28,27 +28,8 @@ export const analyticsService = {
 
         const count = await Order.countDocuments(); // ספירת כמות ההזמנות
 
-        return {
-            orders: orders.map(order => ({
-                orderNumber: order.orderNumber,
-                orderId: order._id,
-                userName: order.userName, // הוספת השדה name של המשתמש
-                products: order.products.map(product => ({
-                    productId: product.productId._id,
-                    title: product.title, // שימוש ב- productId כדי לקבל את ה-title
-                    barcode: product.barcode, // שימוש ב- productId כדי לקבל את ה-barcode
-                    quantity: product.quantity,
-                    price: product.price,
-                    size: product.size,
-                })),
-                totalAmount: order.totalAmount,
-                status: order.status,
-                createdAt: order.createdAt,
-            })),
-            count // הוספת כמות ההזמנות לפלט
-        };
-    }, 
-    
+            return { orders: orders.map(order => order.toObject()), count };
+        },
 /*         getAllOrders: async () => {
         const orders = await Order.find({ status: { $ne: "cancelled" } }).populate("products.productId");
         const count = await Order.countDocuments();
@@ -160,6 +141,7 @@ export const analyticsService = {
     // update order status
     updateOrderStatus: async (orderId: string, status: string) => {
         const order = await Order.findByIdAndUpdate(orderId, { status }, { new: true });
+        console.log("Order " + String(status) + " updated for order:", order);
         if (!order) {
             throw new bizProductsError(404, "Order not found");
         }
