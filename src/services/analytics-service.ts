@@ -24,30 +24,21 @@ export const analyticsService = {
 
     // get all orders
     getAllOrders: async () => {
-        const orders = await Order.find().populate('products.productId').lean();
-
-        const count = await Order.countDocuments(); // ספירת כמות ההזמנות
-
-        return {
-            orders: orders.map(order => ({
-                orderNumber: order.orderNumber,
-                orderId: order._id,
-                userName: order.userName, // הוספת השדה name של המשתמש
-                products: order.products.map(product => ({
-                    productId: product.productId._id,
-                    title: product.title, // שימוש ב- productId כדי לקבל את ה-title
-                    barcode: product.barcode, // שימוש ב- productId כדי לקבל את ה-barcode
-                    quantity: product.quantity,
-                    price: product.price,
-                    size: product.size,
-                })),
-                totalAmount: order.totalAmount,
-                status: order.status,
-                createdAt: order.createdAt,
-            })),
-            count // הוספת כמות ההזמנות לפלט
-        };
-    }, 
+        try {
+            // Fetch all orders with populated products and use lean() for better performance
+            const orders = await Order.find().populate('products.productId').lean();
+            // Count all orders
+            const count = await Order.countDocuments();
+            // Return the orders and count
+            return {
+                orders,
+                count
+            };
+        } catch (error) {
+            console.error("Error getting orders:", error.message);
+            throw error;
+        }
+    },
     
 /*         getAllOrders: async () => {
         const orders = await Order.find({ status: { $ne: "cancelled" } }).populate("products.productId");
