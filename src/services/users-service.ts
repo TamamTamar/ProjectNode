@@ -21,28 +21,34 @@ export const usersService = {
     return user.save();
   },
 
-  //login
-  loginUser: async ({ email, password }: ILogin) => {
-    const user = await User.findOne({ email });
+//login
+loginUser: async ({ email, password }: ILogin) => {
+  // המרת email לאותיות קטנות לפני החיפוש
+  email = email.toLowerCase();
+  
+  const user = await User.findOne({ email });
 
-    if (!user) {
-      throw new BizProductsError(401, "Invalid email or password");
-    }
+  if (!user) {
+    throw new BizProductsError(401, "Invalid email or password");
+  }
 
-    //check the pass:
-    const isValid = await authService.comparePassword(password, user.password);
+  // בדיקת הסיסמה
+  const isValid = await authService.comparePassword(password, user.password);
 
-    if (!isValid) {
-      throw new BizProductsError(401, "Invalid email or password");
-    }
-    // payload {isAdmin ,isBusiness, _id}
-    const payload: IJWTPayload = {
-      _id: user._id.toString(),
-      isAdmin: user.isAdmin,
-     // isBusiness: user.isBusiness,
-    };
-    return authService.generateJWT(payload);
-  },
+  if (!isValid) {
+    throw new BizProductsError(401, "Invalid email or password");
+  }
+
+  // יצירת ה-payload עבור ה-JWT
+  const payload: IJWTPayload = {
+    _id: user._id.toString(),
+    isAdmin: user.isAdmin,
+   // isBusiness: user.isBusiness,
+  };
+
+  return authService.generateJWT(payload);
+},
+
   //get all users
   getAllUsers: async () => User.find({}, { password: 0 }),
 
