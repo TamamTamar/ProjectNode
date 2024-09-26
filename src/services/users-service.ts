@@ -32,18 +32,18 @@ loginUser: async ({ email, password }: ILogin) => {
     throw new BizProductsError(401, "Invalid email or password");
   }
 
-  // בדיקת הסיסמה
+  //compare passwords
   const isValid = await authService.comparePassword(password, user.password);
 
   if (!isValid) {
     throw new BizProductsError(401, "Invalid email or password");
   }
 
-  // יצירת ה-payload עבור ה-JWT
+  // generate JWT
   const payload: IJWTPayload = {
     _id: user._id.toString(),
     isAdmin: user.isAdmin,
-   // isBusiness: user.isBusiness,
+
   };
 
   return authService.generateJWT(payload);

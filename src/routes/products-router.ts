@@ -1,11 +1,10 @@
 import { Router } from "express";
-import { validateProduct } from "../middleware/joi";
-import { productService } from "../services/product-service";
+import BizProductsError from "../errors/BizProductsError";
 import { isAdmin } from "../middleware/is-admin";
 import isProductId from "../middleware/is-product-Id";
-import { validateToken } from "../middleware/validate-token";
 import upload from "../middleware/uploads";
-import BizProductsError from "../errors/BizProductsError";
+import { validateToken } from "../middleware/validate-token";
+import { productService } from "../services/product-service";
 
 
 const router = Router();

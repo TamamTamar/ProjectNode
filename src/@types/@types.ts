@@ -110,7 +110,7 @@ export type IOrderProduct = {
 
 // טיפוס עבור הזמנה
 export type IOrder = {
-  userName
+  userName: string;
   products: IOrderProduct[];
   totalAmount: number;
   status: string;
@@ -143,6 +143,7 @@ export type IUpdateUserType = {
 };
 export type IMessage ={
   fullName: string;
+  phone: string;
   email: string;
   message: string;
   createdAt?: Date;
