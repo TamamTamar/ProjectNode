@@ -49,8 +49,9 @@ export interface ICartItem {
 }
 
 export interface ICart {
-  userId: string;
+  userId?: string; // הפיכת userId לאופציונלי כדי לתמוך במשתמשי אורח
   items: ICartItem[];
+  isGuest?: boolean; // הוספת שדה חדש לזיהוי האם מדובר במשתמש אורח
 }
 
 // טיפוס עבור עגלת קניות עם סיכומים
