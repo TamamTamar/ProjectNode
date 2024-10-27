@@ -13,8 +13,9 @@ const cartItemSchema = new Schema({
 });
 
 const cartSchema = new Schema<ICart>({
-    userId: { type: String, required: true },
+    userId: { type: String },
     items: [cartItemSchema],
+    isGuest: {type: Boolean, default: false },
 });
 
 export default cartSchema;
