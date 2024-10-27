@@ -1,39 +1,21 @@
-import { RequestHandler } from "express";
-import bizProductsError from "../errors/BizProductsError";
-import { validateToken } from "./validate-token";
-import Cart from "../db/models/cart-model";
-import { productService } from "../services/product-service";
+import { NextFunction, Request, Response } from "express";
 
-const _isSelfCart: RequestHandler = (req, res, next) => {
-    const userId = req.payload._id;
-    const 
-    cart = await get
-    if (userId === Cart) {
+// Middleware to validate product and cart ownership
+const _validateAddToCart = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { productId, variantId, quantity, size } = req.body;
 
+        // אם המשתמש לא מחובר, אנחנו מאפשרים המשך כדי לטפל בעגלת אורח
+        if (!req.payload || !req.payload._id) {
+            console.log("User not authenticated, proceeding as a guest.");
+            return next(); // ממשיכים כי העגלה תישמר בלוקל סטורג'
+        }
 
-if (req.payload&& req.payload._id === req.body.userId) {
-
-    return next(); 
-}
-console.log(req.payload)
-  next(new bizProductsError(403, "Only the user is allowed"));
-};
-
-export const isSelfCart = [validateToken, _isSelfCart];
-
-
-const _isProductOwnerOrAdmin: RequestHandler = async (req, _, next) => {
-    const card = await productService.getProductById(req.params.id);
-    const userId = req.payload._id;
-
-    if (card.userId === userId || req.payload?.isAdmin) {
-        console.log(card.userId, userId, req.payload?.isAdmin);
-        return next();
-
+        next();
+    } catch (error) {
+        next(error);
     }
-
-    else next(new bizProductsError(403, "Only the card owner or admin is allowed"))
-    console.log(card.userId, userId);
 };
 
-export const isProductOwnerOrAdmin = [validateToken, _isProductOwnerOrAdmin];
+// הסרת validateToken מהמעלית כדי לאפשר גם לאורחים גישה לפונקציה
+export const validateAddToCart = [_validateAddToCart];
