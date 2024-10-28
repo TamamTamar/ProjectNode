@@ -19,3 +19,4 @@ const _validateAddToCart = async (req: Request, res: Response, next: NextFunctio
 
 // הסרת validateToken מהמעלית כדי לאפשר גם לאורחים גישה לפונקציה
 export const validateAddToCart = [_validateAddToCart];
+
